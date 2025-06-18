@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced QR Code Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- QR Code Styling Library -->
+    <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>অ্যাডভান্সড QR কোড জেনারেটর</h1>
+        <div class="main-content">
+            <div class="input-section">
+                <!-- Input Data -->
+                <div class="form-group">
+                    <label for="data-input">লিংক, টেক্সট, বা ফোন নম্বর দিন:</label>
+                    <textarea id="data-input" rows="4" placeholder="যেমন: https://www.google.com"></textarea>
+                </div>
+                
+                <hr>
+
+                <!-- Customization Options -->
+                <h3>আপনার QR কোড ডিজাইন করুন</h3>
+                <div class="options-grid">
+                    <div class="form-group">
+                        <label for="dots-color">ডট-এর রঙ:</label>
+                        <input type="color" id="dots-color" value="#000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="bg-color">পটভূমির রঙ (Background):</label>
+                        <input type="color" id="bg-color" value="#ffffff">
+                    </div>
+                    <div class="form-group">
+                        <label for="corner-square-color">কর্নার স্কয়ার-এর রঙ:</label>
+                        <input type="color" id="corner-square-color" value="#000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="dots-style">ডট-এর স্টাইল:</label>
+                        <select id="dots-style">
+                            <option value="square">বর্গাকার (Square)</option>
+                            <option value="rounded">গোলাকার (Rounded)</option>
+                            <option value="dots">ডট (Dots)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="corner-style">কর্নার-এর স্টাইল:</label>
+                        <select id="corner-style">
+                            <option value="square">বর্গাকার (Square)</option>
+                            <option value="dot">ডট (Dot)</option>
+                            <option value="extra-rounded">বেশি গোলাকার (Extra Rounded)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Logo Upload -->
+                <div class="form-group logo-group">
+                    <label for="logo-upload">লোগো যোগ করুন (ঐচ্ছিক):</label>
+                    <input type="file" id="logo-upload" accept="image/*">
+                    <button id="remove-logo" class="utility-btn">লোগো সরান</button>
+                </div>
+
+                <!-- Generate Button -->
+                <button id="generate-btn">QR কোড তৈরি করুন</button>
+            </div>
+
+            <div class="output-section">
+                <div id="qr-code-canvas"></div>
+                <div class="download-buttons">
+                     <button id="download-btn-png">PNG ডাউনলোড</button>
+                     <button id="download-btn-svg">SVG ডাউনলোড</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
