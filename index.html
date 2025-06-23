@@ -4,41 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    
+    <title>Advanced QR Code Generator - Free, Fast & Customizable</title>
 
-    <!-- ✅ SEO Title -->
-<title>Advanced QR Code Generator - Free, Fast & Customizable</title>
+    <meta name="description" content="Create advanced QR codes instantly with our free and customizable QR code generator. Fast, secure, and perfect for personal or business use.">
+    <meta name="keywords" content="advanced qr code generator, free qr code maker, customizable qr code, qr generator online, qr code tool">
+    <meta name="robots" content="index, follow">
 
-<!-- ✅ SEO Meta Tags -->
-<meta name="description" content="Create advanced QR codes instantly with our free and customizable QR code generator. Fast, secure, and perfect for personal or business use.">
-<meta name="keywords" content="advanced qr code generator, free qr code maker, customizable qr code, qr generator online, qr code tool">
-<meta name="robots" content="index, follow">
-
-<!-- ✅ Open Graph (for better social media preview) -->
-<meta property="og:title" content="Advanced QR Code Generator">
-<meta property="og:description" content="Fast & free QR code generator with design options. Create QR codes for any purpose.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://advancedqrcodegenerator.xyz/"> <!-- আপনার ডোমেইন দিন -->
+    <meta property="og:title" content="Advanced QR Code Generator">
+    <meta property="og:description" content="Fast & free QR code generator with design options. Create QR codes for any purpose.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://advancedqrcodegenerator.xyz/">
 
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- QR Code Styling Library -->
     <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>অ্যাডভান্সড QR কোড জেনারেটর</h1>
+        <h1 class="rainbow-text">অ্যাডভান্সড QR কোড জেনারেটর</h1>
         <div class="main-content">
             <div class="input-section">
-                <!-- Input Data -->
                 <div class="form-group">
                     <label for="data-input">লিংক, টেক্সট, বা ফোন নম্বর দিন:</label>
                     <textarea id="data-input" rows="4" placeholder="যেমন: https://www.google.com"></textarea>
                 </div>
-                
+
                 <hr>
 
-                <!-- Customization Options -->
                 <h3>আপনার QR কোড ডিজাইন করুন</h3>
                 <div class="options-grid">
                     <div class="form-group">
@@ -71,22 +63,20 @@
                     </div>
                 </div>
 
-                <!-- Logo Upload -->
                 <div class="form-group logo-group">
                     <label for="logo-upload">লোগো যোগ করুন (ঐচ্ছিক):</label>
                     <input type="file" id="logo-upload" accept="image/*">
                     <button id="remove-logo" class="utility-btn">লোগো সরান</button>
                 </div>
 
-                <!-- Generate Button -->
                 <button id="generate-btn">QR কোড তৈরি করুন</button>
             </div>
 
             <div class="output-section">
                 <div id="qr-code-canvas"></div>
                 <div class="download-buttons">
-                     <button id="download-btn-png">PNG ডাউনলোড</button>
-                     <button id="download-btn-svg">SVG ডাউনলোড</button>
+                    <button id="download-btn-png">PNG ডাউনলোড</button>
+                    <button id="download-btn-svg">SVG ডাউনলোড</button>
                 </div>
             </div>
         </div>
