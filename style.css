@@ -1,14 +1,22 @@
 :root {
     --primary-color: #4a90e2;
-    --secondary-color: #f5f7fa;
     --text-color: #333;
     --border-color: #dfe4ea;
     --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* 🔥 ৫ রঙের গ্র্যাডিয়েন্ট ব্যাকগ্রাউন্ড অ্যানিমেশন */
 body {
+    background: linear-gradient(-45deg,
+        #ff0066,
+        #6600ff,
+        #00ccff,
+        #00ff99,
+        #ffcc00
+    );
+    background-size: 600% 600%;
+    animation: gradientBG 20s ease infinite;
     font-family: 'Noto Sans Bengali', sans-serif;
-    background-color: var(--secondary-color);
     color: var(--text-color);
     margin: 0;
     padding: 20px;
@@ -17,20 +25,42 @@ body {
     align-items: center;
     min-height: 100vh;
 }
-/* (বাকি CSS কোড আগের উত্তর থেকে কপি করে পেস্ট করুন...) */
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 🌈 টাইটেল RGB এনিমেশন */
+.rainbow-text {
+    font-size: 3rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+    background-size: 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rainbowMove 5s linear infinite;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+@keyframes rainbowMove {
+    0% { background-position: 0% }
+    100% { background-position: 400% }
+}
+
+/* 🔳 container গ্লাস/transparent effect */
 .container {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
     padding: 30px 40px;
     border-radius: 12px;
     box-shadow: var(--shadow);
     width: 100%;
     max-width: 1000px;
 }
-h1 {
-    text-align: center;
-    color: var(--primary-color);
-    margin-bottom: 30px;
-}
+
 .main-content {
     display: flex;
     gap: 40px;
@@ -149,20 +179,17 @@ input[type="file"] {
     .container {
         padding: 20px;
     }
-    h1 {
-        font-size: 24px;
-    }
     .options-grid {
         grid-template-columns: 1fr;
     }
     .download-buttons {
-       width: 100%;
-       flex-direction: column;
+        width: 100%;
+        flex-direction: column;
     }
     #qr-code-canvas {
-      width: 100%;
-      height: auto;
-      min-height: 250px;
-      aspect-ratio: 1 / 1;
+        width: 100%;
+        height: auto;
+        min-height: 250px;
+        aspect-ratio: 1 / 1;
     }
 }
