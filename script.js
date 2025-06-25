@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const generateBtn = document.getElementById("generate-btn");
     const downloadPngBtn = document.getElementById("download-btn-png");
     const downloadSvgBtn = document.getElementById("download-btn-svg");
+    const downloadjpgBtn = document.getElementById("download-btn-jpg");
     const qrCodeContainer = document.getElementById("qr-code-canvas");
     let logoFile = null;
     let qrCodeInstance = null;
@@ -45,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
             qrCodeContainer.innerHTML = `<p style="font-size: 16px; text-align: center; color: #888;">তথ্য দিয়ে 'QR কোড তৈরি করুন' বাটনে ক্লিক করুন।</p>`;
             downloadPngBtn.style.display = 'none';
             downloadSvgBtn.style.display = 'none';
+            downloadjpgBtn.style.display = 'none';
             return;
         }
 
@@ -81,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         downloadPngBtn.style.display = 'block';
         downloadSvgBtn.style.display = 'block';
+        downloadjpgBtn.style.display = 'block';
     }
 
     downloadPngBtn.addEventListener('click', () => {
@@ -93,9 +96,15 @@ document.addEventListener("DOMContentLoaded", () => {
             qrCodeInstance.download({ name: 'qr-code', extension: 'svg' });
         }
     });
+    downloadjpgBtn.addEventListener('click', () => {
+        if(qrCodeInstance) {
+            qrCodeInstance.download({ name: 'qr-code', extension: 'jpg' });
+        }
+    });
     
     // Initial state setup
     qrCodeContainer.innerHTML = `<p style="font-size: 16px; text-align: center; color: #888;">আপনার QR কোড এখানে দেখা যাবে।</p>`;
     downloadPngBtn.style.display = 'none';
     downloadSvgBtn.style.display = 'none';
+    downloadjpgBtn.style.display = 'none';
 });

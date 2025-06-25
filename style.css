@@ -127,7 +127,7 @@ input[type="color"] {
 input[type="file"] {
     border: none;
 }
-#generate-btn, #download-btn-png, #download-btn-svg, .utility-btn {
+#generate-btn, #download-btn-png, #download-btn-svg, #download-btn-jpg, .utility-btn {
     width: 100%;
     padding: 15px;
     background-color: var(--primary-color);
@@ -170,6 +170,9 @@ input[type="file"] {
     background-color: #2ecc71;
 }
 #download-btn-png:hover, #download-btn-svg:hover {
+    background-color: #27ae60;
+}
+#download-btn-jpg {
     background-color: #27ae60;
 }
 @media (max-width: 768px) {
