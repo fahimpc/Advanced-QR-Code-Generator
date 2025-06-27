@@ -101,7 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
             qrCodeInstance.download({ name: 'qr-code', extension: 'jpg' });
         }
     });
-    
     // Initial state setup
     qrCodeContainer.innerHTML = `<p style="font-size: 16px; text-align: center; color: #888;">আপনার QR কোড এখানে দেখা যাবে।</p>`;
     downloadPngBtn.style.display = 'none';
