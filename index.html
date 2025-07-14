@@ -25,7 +25,12 @@
                     <button class="tab-link active" onclick="openTab(event, 'text-url')">লিংক / টেক্সট</button>
                     <button class="tab-link" onclick="openTab(event, 'wifi')">Wi-Fi</button>
                     <button class="tab-link" onclick="openTab(event, 'vcard')">vCard</button>
-                </div>
+                    <button class="tab-link" onclick="openTab(event, 'email')">ইমেইল</button>
+                    <button class="tab-link" onclick="openTab(event, 'sms')">SMS</button>
+                    <button class="tab-link" onclick="openTab(event, 'phone')">ফোন</button>
+                    <button class="tab-link" onclick="openTab(event, 'location')">লোকেশন</button>
+                    <button class="tab-link" onclick="openTab(event, 'event')">ইভেন্ট</button>
+                    </div>
 
                 <div id="text-url" class="tab-content" style="display: block;">
                     <div class="form-group">
@@ -68,13 +73,79 @@
                     </div>
                 </div>
                 
+                <div id="email" class="tab-content">
+                    <div class="form-group">
+                        <label for="email-to">ইমেইল ঠিকানা:</label>
+                        <input type="email" id="email-to" placeholder="someone@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="email-subject">বিষয় (Subject):</label>
+                        <input type="text" id="email-subject" placeholder="ইমেইলের বিষয়">
+                    </div>
+                    <div class="form-group">
+                        <label for="email-body">বার্তা (Body):</label>
+                        <textarea id="email-body" rows="3" placeholder="আপনার বার্তা"></textarea>
+                    </div>
+                </div>
+
+                <div id="sms" class="tab-content">
+                    <div class="form-group">
+                        <label for="sms-to">ফোন নম্বর:</label>
+                        <input type="tel" id="sms-to" placeholder="+8801700000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="sms-body">মেসেজ:</label>
+                        <textarea id="sms-body" rows="3" placeholder="আপনার মেসেজ"></textarea>
+                    </div>
+                </div>
+
+                <div id="phone" class="tab-content">
+                    <div class="form-group">
+                        <label for="phone-number">ফোন নম্বর:</label>
+                        <input type="tel" id="phone-number" placeholder="+8801700000000">
+                    </div>
+                </div>
+
+                <div id="location" class="tab-content">
+                    <div class="form-group">
+                        <label for="loc-lat">অক্ষাংশ (Latitude):</label>
+                        <input type="text" id="loc-lat" placeholder="23.8103">
+                    </div>
+                    <div class="form-group">
+                        <label for="loc-lon">দ্রাঘিমাংশ (Longitude):</label>
+                        <input type="text" id="loc-lon" placeholder="90.4125">
+                    </div>
+                </div>
+
+                <div id="event" class="tab-content">
+                    <div class="form-group">
+                        <label for="event-summary">ইভেন্টের নাম:</label>
+                        <input type="text" id="event-summary" placeholder="Meeting with Team">
+                    </div>
+                    <div class="form-group">
+                        <label for="event-start">শুরুর সময়:</label>
+                        <input type="datetime-local" id="event-start">
+                    </div>
+                    <div class="form-group">
+                        <label for="event-end">শেষ সময়:</label>
+                        <input type="datetime-local" id="event-end">
+                    </div>
+                     <div class="form-group">
+                        <label for="event-location">স্থান:</label>
+                        <input type="text" id="event-location" placeholder="Office, Dhaka">
+                    </div>
+                </div>
                 <hr>
 
                 <h3>আপনার QR কোড ডিজাইন করুন</h3>
                 <div class="options-grid">
                     <div class="form-group">
-                        <label for="dots-color">ডট-এর রঙ:</label>
+                        <label for="dots-color">ডট-এর রঙ (অথবা গ্রেডিয়েন্ট শুরু):</label>
                         <input type="color" id="dots-color" value="#000000">
+                    </div>
+                     <div class="form-group">
+                        <label for="dots-color-2">ডট-এর গ্রেডিয়েন্ট শেষ (ঐচ্ছিক):</label>
+                        <input type="color" id="dots-color-2" value="#000000">
                     </div>
                     <div class="form-group">
                         <label for="bg-color">পটভূমির রঙ (Background):</label>
@@ -90,6 +161,9 @@
                             <option value="square">বর্গাকার (Square)</option>
                             <option value="rounded">গোলাকার (Rounded)</option>
                             <option value="dots">ডট (Dots)</option>
+                            <option value="classy">Classy</option>
+                            <option value="classy-rounded">Classy Rounded</option>
+                            <option value="extra-rounded">Extra Rounded</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -100,7 +174,23 @@
                             <option value="extra-rounded">বেশি গোলাকার (Extra Rounded)</option>
                         </select>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="gradient-type">গ্রেডিয়েন্ট ধরণ:</label>
+                        <select id="gradient-type">
+                            <option value="linear">রৈখিক (Linear)</option>
+                            <option value="radial">বৃত্তাকার (Radial)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="error-correction">ত্রুটি সংশোধন লেভেল (Error Correction):</label>
+                        <select id="error-correction">
+                            <option value="L">Low (L)</option>
+                            <option value="M">Medium (M)</option>
+                            <option value="Q">Quartile (Q)</option>
+                            <option value="H">High (H)</option>
+                        </select>
+                    </div>
+                    </div>
 
                 <div class="form-group logo-group">
                     <label for="logo-upload">লোগো যোগ করুন (ঐচ্ছিক):</label>
