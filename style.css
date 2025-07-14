@@ -30,6 +30,7 @@ body {
     font-weight: bold;
     background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
     background-size: 400%;
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: rainbowMove 5s linear infinite;
