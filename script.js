@@ -46,6 +46,14 @@ document.addEventListener("DOMContentLoaded", () => {
         generateQRCode();
     });
 
+    // NEW: Helper function to format date for VEVENT
+    function formatVEventDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        // Format to YYYYMMDDTHHMMSSZ, by removing '-', ':', and milliseconds
+        return date.toISOString().replace(/[-:]/g, "").split('.')[0] + 'Z';
+    }
+
     function getQrData() {
         switch (activeTab) {
             case 'wifi':
@@ -56,8 +64,32 @@ document.addEventListener("DOMContentLoaded", () => {
             case 'vcard':
                 const name = document.getElementById('vcard-name').value;
                 const phone = document.getElementById('vcard-phone').value;
-                const email = document.getElementById('vcard-email').value;
-                return `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${email}\nEND:VCARD`;
+                const emailVcard = document.getElementById('vcard-email').value;
+                return `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${emailVcard}\nEND:VCARD`;
+            // NEW CASES START
+            case 'email':
+                const to = document.getElementById('email-to').value;
+                const subject = document.getElementById('email-subject').value;
+                const body = document.getElementById('email-body').value;
+                return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            case 'sms':
+                const smsTo = document.getElementById('sms-to').value;
+                const smsBody = document.getElementById('sms-body').value;
+                return `SMSTO:${smsTo}:${encodeURIComponent(smsBody)}`;
+            case 'phone':
+                const tel = document.getElementById('phone-number').value;
+                return `tel:${tel}`;
+            case 'location':
+                const lat = document.getElementById('loc-lat').value;
+                const lon = document.getElementById('loc-lon').value;
+                return `geo:${lat},${lon}`;
+            case 'event':
+                const summary = document.getElementById('event-summary').value;
+                const start = formatVEventDate(document.getElementById('event-start').value);
+                const end = formatVEventDate(document.getElementById('event-end').value);
+                const location = document.getElementById('event-location').value;
+                return `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${summary}\nDTSTART:${start}\nDTEND:${end}\nLOCATION:${location}\nEND:VEVENT\nEND:VCALENDAR`;
+            // NEW CASES END
             case 'text-url':
             default:
                 return document.getElementById("data-input").value.trim();
@@ -66,20 +98,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function generateQRCode() {
         const data = getQrData();
-        if (!data || (typeof data === 'string' && !data.trim())) {
+        if (!data || (typeof data === 'string' && !data.trim()) || data.includes('undefined')) {
             downloadPngBtn.style.display = 'none';
             downloadSvgBtn.style.display = 'none';
             downloadJpgBtn.style.display = 'none';
             return;
         }
 
+        // NEW: Logic for handling gradient colors
+        const dotsColor1 = document.getElementById("dots-color").value;
+        const dotsColor2 = document.getElementById("dots-color-2").value;
+        const dotsOptions = {
+            type: document.getElementById("dots-style").value,
+        };
+        if (dotsColor1 !== dotsColor2) {
+            dotsOptions.gradient = {
+                type: document.getElementById("gradient-type").value,
+                colorStops: [
+                    { offset: 0, color: dotsColor1 },
+                    { offset: 1, color: dotsColor2 }
+                ]
+            };
+        } else {
+            dotsOptions.color = dotsColor1;
+        }
+        
         const options = {
             data: data,
             image: logoFile,
-            dotsOptions: {
-                color: document.getElementById("dots-color").value,
-                type: document.getElementById("dots-style").value,
-            },
+            dotsOptions: dotsOptions, // Updated dots options
             backgroundOptions: {
                 color: document.getElementById("bg-color").value,
             },
@@ -87,6 +134,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 color: document.getElementById("corner-square-color").value,
                 type: document.getElementById("corner-style").value,
             },
+            // NEW: Adding qrOptions for error correction level
+            qrOptions: {
+                errorCorrectionLevel: document.getElementById("error-correction").value
+            }
         };
         qrCodeInstance.update(options);
 
@@ -118,5 +169,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // প্রাথমিক অবস্থা সেটআপ
+    document.getElementById('download-btn-png').style.display = 'block';
+    document.getElementById('download-btn-svg').style.display = 'block';
+    document.getElementById('download-btn-jpg').style.display = 'block';
     generateQRCode();
 });
