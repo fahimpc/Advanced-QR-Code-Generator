@@ -3,20 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Advanced QR Code Generator - Free, Fast & Customizable</title>
-
-    <meta name="description" content="Create advanced QR codes instantly with our free and customizable QR code generator. Fast, secure, and perfect for personal or business use.">
-    <meta name="keywords" content="advanced qr code generator, free qr code maker, customizable qr code, qr generator online, qr code tool">
+    <meta name="description" content="Create advanced QR codes for WiFi, vCards, links and more with our free and customizable QR code generator. Fast, secure, and perfect for personal or business use.">
+    <meta name="keywords" content="advanced qr code generator, free qr code maker, wifi qr code, vcard qr code, customizable qr code, qr generator online">
     <meta name="robots" content="index, follow">
-
     <meta property="og:title" content="Advanced QR Code Generator">
     <meta property="og:description" content="Fast & free QR code generator with design options. Create QR codes for any purpose.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://advancedqrcodegenerator.xyz/">
-
-    <link rel="icon" type="image/x-icon" href="favicon.ico.ico">
-
+    <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
@@ -26,11 +21,53 @@
         <h1 class="rainbow-text">অ্যাডভান্সড QR কোড জেনারেটর</h1>
         <div class="main-content">
             <div class="input-section">
-                <div class="form-group">
-                    <label for="data-input">লিংক, টেক্সট, বা ফোন নম্বর দিন:</label>
-                    <textarea id="data-input" rows="4" placeholder="যেমন: https://www.google.com"></textarea>
+                <div class="tabs">
+                    <button class="tab-link active" onclick="openTab(event, 'text-url')">লিংক / টেক্সট</button>
+                    <button class="tab-link" onclick="openTab(event, 'wifi')">Wi-Fi</button>
+                    <button class="tab-link" onclick="openTab(event, 'vcard')">vCard</button>
                 </div>
 
+                <div id="text-url" class="tab-content" style="display: block;">
+                    <div class="form-group">
+                        <label for="data-input">লিংক বা টেক্সট দিন:</label>
+                        <textarea id="data-input" rows="4" placeholder="যেমন: https://www.google.com"></textarea>
+                    </div>
+                </div>
+
+                <div id="wifi" class="tab-content">
+                    <div class="form-group">
+                        <label for="wifi-ssid">নেটওয়ার্কের নাম (SSID):</label>
+                        <input type="text" id="wifi-ssid" placeholder="My Home WiFi">
+                    </div>
+                    <div class="form-group">
+                        <label for="wifi-pass">পাসওয়ার্ড:</label>
+                        <input type="password" id="wifi-pass" placeholder="Password">
+                    </div>
+                     <div class="form-group">
+                        <label for="wifi-encryption">এনক্রিপশন:</label>
+                        <select id="wifi-encryption">
+                            <option value="WPA">WPA/WPA2</option>
+                            <option value="WEP">WEP</option>
+                            <option value="nopass">None</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="vcard" class="tab-content">
+                     <div class="form-group">
+                        <label for="vcard-name">পুরো নাম:</label>
+                        <input type="text" id="vcard-name" placeholder="John Doe">
+                    </div>
+                     <div class="form-group">
+                        <label for="vcard-phone">ফোন নম্বর:</label>
+                        <input type="tel" id="vcard-phone" placeholder="+123456789">
+                    </div>
+                     <div class="form-group">
+                        <label for="vcard-email">ইমেইল:</label>
+                        <input type="email" id="vcard-email" placeholder="email@example.com">
+                    </div>
+                </div>
+                
                 <hr>
 
                 <h3>আপনার QR কোড ডিজাইন করুন</h3>
@@ -70,8 +107,6 @@
                     <input type="file" id="logo-upload" accept="image/*">
                     <button id="remove-logo" class="utility-btn">লোগো সরান</button>
                 </div>
-
-                <button id="generate-btn">QR কোড তৈরি করুন</button>
             </div>
 
             <div class="output-section">

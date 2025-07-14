@@ -1,110 +1,122 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // (পুরো JavaScript কোড আগের উত্তর থেকে কপি করে পেস্ট করুন...)
-    const dataInput = document.getElementById("data-input");
-    const dotsColorInput = document.getElementById("dots-color");
-    const bgColorInput = document.getElementById("bg-color");
-    const cornerSquareColorInput = document.getElementById("corner-square-color");
-    // const cornerDotColorInput = document.getElementById("corner-dot-color");
-    const dotsStyleSelect = document.getElementById("dots-style");
-    const cornerStyleSelect = document.getElementById("corner-style");
+    // ইনপুট এলিমেন্টগুলো সিলেক্ট করা
+    const allInputs = document.querySelectorAll('.input-section input, .input-section textarea, .input-section select');
     const logoUpload = document.getElementById("logo-upload");
     const removeLogoBtn = document.getElementById("remove-logo");
-    const generateBtn = document.getElementById("generate-btn");
     const downloadPngBtn = document.getElementById("download-btn-png");
     const downloadSvgBtn = document.getElementById("download-btn-svg");
-    const downloadjpgBtn = document.getElementById("download-btn-jpg");
+    const downloadJpgBtn = document.getElementById("download-btn-jpg");
     const qrCodeContainer = document.getElementById("qr-code-canvas");
+
     let logoFile = null;
     let qrCodeInstance = null;
+    let activeTab = 'text-url';
+
+    // QR কোডের জন্য একটি বেসিক ইনস্ট্যান্স তৈরি
+    qrCodeInstance = new QRCodeStyling({
+        width: 300,
+        height: 300,
+        data: "https://advancedqrcodegenerator.xyz/",
+        dotsOptions: { color: "#000000", type: "square" },
+        backgroundOptions: { color: "#ffffff" },
+        cornersSquareOptions: { type: "square" },
+        imageOptions: { crossOrigin: "anonymous", margin: 10, imageSize: 0.4 }
+    });
+    qrCodeInstance.append(qrCodeContainer);
+
+    // লাইভ আপডেটের জন্য ইভেন্ট লিসেনার
+    allInputs.forEach(input => {
+        input.addEventListener("input", generateQRCode);
+    });
+
     logoUpload.addEventListener("change", (e) => {
         if (e.target.files && e.target.files[0]) {
             const reader = new FileReader();
             reader.onload = (event) => {
                 logoFile = event.target.result;
-                if (qrCodeInstance) generateQRCode();
+                generateQRCode();
             };
             reader.readAsDataURL(e.target.files[0]);
         }
     });
+
     removeLogoBtn.addEventListener("click", () => {
         logoFile = null;
         logoUpload.value = '';
-        if (qrCodeInstance) generateQRCode();
-    });
-    generateBtn.addEventListener("click", generateQRCode);
-    [dotsColorInput, bgColorInput, cornerSquareColorInput, dotsStyleSelect, cornerStyleSelect].forEach(input => {
-        input.addEventListener("input", () => { // "input" event for live color changes
-            if (qrCodeInstance) {
-                generateQRCode();
-            }
-        });
+        generateQRCode();
     });
 
+    function getQrData() {
+        switch (activeTab) {
+            case 'wifi':
+                const ssid = document.getElementById('wifi-ssid').value;
+                const pass = document.getElementById('wifi-pass').value;
+                const enc = document.getElementById('wifi-encryption').value;
+                return `WIFI:T:${enc};S:${ssid};P:${pass};;`;
+            case 'vcard':
+                const name = document.getElementById('vcard-name').value;
+                const phone = document.getElementById('vcard-phone').value;
+                const email = document.getElementById('vcard-email').value;
+                return `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${email}\nEND:VCARD`;
+            case 'text-url':
+            default:
+                return document.getElementById("data-input").value.trim();
+        }
+    }
+
     function generateQRCode() {
-        const data = dataInput.value.trim();
-        if (!data) {
-            qrCodeContainer.innerHTML = `<p style="font-size: 16px; text-align: center; color: #888;">তথ্য দিয়ে 'QR কোড তৈরি করুন' বাটনে ক্লিক করুন।</p>`;
+        const data = getQrData();
+        if (!data || (typeof data === 'string' && !data.trim())) {
             downloadPngBtn.style.display = 'none';
             downloadSvgBtn.style.display = 'none';
-            downloadjpgBtn.style.display = 'none';
+            downloadJpgBtn.style.display = 'none';
             return;
         }
 
         const options = {
-            width: 300,
-            height: 300,
             data: data,
             image: logoFile,
             dotsOptions: {
-                color: dotsColorInput.value,
-                type: dotsStyleSelect.value,
+                color: document.getElementById("dots-color").value,
+                type: document.getElementById("dots-style").value,
             },
             backgroundOptions: {
-                color: bgColorInput.value,
+                color: document.getElementById("bg-color").value,
             },
             cornersSquareOptions: {
-                color: cornerSquareColorInput.value,
-                type: cornerStyleSelect.value,
-            },
-            imageOptions: {
-                crossOrigin: "anonymous",
-                margin: 10,
-                imageSize: 0.4, 
+                color: document.getElementById("corner-square-color").value,
+                type: document.getElementById("corner-style").value,
             },
         };
-
-        if (!qrCodeInstance) {
-            qrCodeInstance = new QRCodeStyling(options);
-            qrCodeContainer.innerHTML = '';
-            qrCodeInstance.append(qrCodeContainer);
-        } else {
-            qrCodeInstance.update(options);
-        }
+        qrCodeInstance.update(options);
 
         downloadPngBtn.style.display = 'block';
         downloadSvgBtn.style.display = 'block';
-        downloadjpgBtn.style.display = 'block';
+        downloadJpgBtn.style.display = 'block';
     }
 
-    downloadPngBtn.addEventListener('click', () => {
-        if(qrCodeInstance) {
-            qrCodeInstance.download({ name: 'qr-code', extension: 'png' });
-        }
-    });
-    downloadSvgBtn.addEventListener('click', () => {
-        if(qrCodeInstance) {
-            qrCodeInstance.download({ name: 'qr-code', extension: 'svg' });
-        }
-    });
-    downloadjpgBtn.addEventListener('click', () => {
-        if(qrCodeInstance) {
-            qrCodeInstance.download({ name: 'qr-code', extension: 'jpg' });
-        }
-    });
+    // ডাউনলোড বাটনগুলোর জন্য ইভেন্ট লিসেনার
+    downloadPngBtn.addEventListener('click', () => qrCodeInstance.download({ name: 'qr-code', extension: 'png' }));
+    downloadSvgBtn.addEventListener('click', () => qrCodeInstance.download({ name: 'qr-code', extension: 'svg' }));
+    downloadJpgBtn.addEventListener('click', () => qrCodeInstance.download({ name: 'qr-code', extension: 'jpeg' }));
     
-    // Initial state setup
-    qrCodeContainer.innerHTML = `<p style="font-size: 16px; text-align: center; color: #888;">আপনার QR কোড এখানে দেখা যাবে।</p>`;
-    downloadPngBtn.style.display = 'none';
-    downloadSvgBtn.style.display = 'none';
-    downloadjpgBtn.style.display = 'none';
+    // ট্যাবের জন্য গ্লোবাল ফাংশন
+    window.openTab = (evt, tabName) => {
+        activeTab = tabName;
+        let i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tab-link");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+        generateQRCode(); // ট্যাব পরিবর্তন হলেও QR কোড আপডেট হবে
+    }
+
+    // প্রাথমিক অবস্থা সেটআপ
+    generateQRCode();
 });
