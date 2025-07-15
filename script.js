@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     // ইনপুট এলিমেন্টগুলো সিলেক্ট করা
-    const allInputs = document.querySelectorAll('.input-section input, .input-section textarea, .input-section select');
+    const allInputs = document.querySelectorAll('.input-section input:not(#qr-resolution), .input-section textarea, .input-section select');
     const logoUpload = document.getElementById("logo-upload");
     const removeLogoBtn = document.getElementById("remove-logo");
     const downloadPngBtn = document.getElementById("download-btn-png");
@@ -8,14 +8,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const downloadJpgBtn = document.getElementById("download-btn-jpg");
     const qrCodeContainer = document.getElementById("qr-code-canvas");
 
+    // নতুন: রেজোলিউশন উপাদান
+    const qrResolutionSlider = document.getElementById("qr-resolution");
+    const resolutionDisplay = document.getElementById("resolution-display");
+
     let logoFile = null;
     let qrCodeInstance = null;
-    let activeTab = 'text-url'; // Initial active tab
+    let activeTab = 'text-url'; // প্রাথমিক সক্রিয় ট্যাব
+
+    // প্রাথমিক রেজোলিউশন মান
+    const initialResolution = parseInt(qrResolutionSlider.value);
+    resolutionDisplay.textContent = `${initialResolution} x ${initialResolution} Px`;
 
     // QR কোডের জন্য একটি বেসিক ইনস্ট্যান্স তৈরি
     qrCodeInstance = new QRCodeStyling({
-        width: 300,
-        height: 300,
+        width: initialResolution, // স্লাইডারের প্রাথমিক মান ব্যবহার করুন
+        height: initialResolution, // স্লাইডারের প্রাথমিক মান ব্যবহার করুন
         data: "https://advancedqrcodegenerator.xyz/",
         dotsOptions: { color: "#000000", type: "square" },
         backgroundOptions: { color: "#ffffff" },
@@ -27,6 +35,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // লাইভ আপডেটের জন্য ইভেন্ট লিসেনার
     allInputs.forEach(input => {
         input.addEventListener("input", generateQRCode);
+    });
+
+    // নতুন: রেজোলিউশন স্লাইডারের জন্য ইভেন্ট লিসেনার যোগ করুন
+    qrResolutionSlider.addEventListener("input", () => {
+        const resolution = qrResolutionSlider.value;
+        resolutionDisplay.textContent = `${resolution} x ${resolution} Px`;
+        // ভিজ্যুয়াল প্রতিক্রিয়ার জন্য কন্টেইনারের আকার অবিলম্বে আপডেট করার জন্য
+        // এখানে qrCodeContainer এর CSS width/height সেট না করে শুধুমাত্র QR কোড ইনস্ট্যান্স আপডেট করলে
+        // CSS এর max-width প্রপার্টিটি নিয়ন্ত্রণ করতে পারবে।
+        // qrCodeContainer.style.width = `${resolution}px`; // এই লাইনটি সরিয়ে দেওয়া হয়েছে
+        // qrCodeContainer.style.height = `${resolution}px`; // এই লাইনটি সরিয়ে দেওয়া হয়েছে
+        generateQRCode(); // নতুন রেজোলিউশন দিয়ে QR কোড পুনরায় জেনারেট করুন
     });
 
     logoUpload.addEventListener("change", (e) => {
@@ -50,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function formatVEventDate(dateString) {
         if (!dateString) return '';
         const date = new Date(dateString);
-        // Format to YYYYMMDDTHHMMSSZ, by removing '-', ':', and milliseconds
+        // YYYYMMDDTHHMMSSZ ফরম্যাটে রূপান্তর, হাইফেন, কোলন এবং মিলিসেকেন্ড বাদ দিয়ে
         return date.toISOString().replace(/[-:]/g, "").split('.')[0] + 'Z';
     }
 
@@ -66,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const phone = document.getElementById('vcard-phone').value;
                 const emailVcard = document.getElementById('vcard-email').value;
                 return `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${emailVcard}\nEND:VCARD`;
-            case 'mecard': // NEW: MECARD Data Generation
+            case 'mecard':
                 let mecardData = "MECARD:";
                 const firstName = document.getElementById('mecard-firstname').value;
                 const lastName = document.getElementById('mecard-lastname').value;
@@ -106,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     mecardData += `URL:${website};`;
                 }
                 if (birthday) {
-                    const formattedBirthday = birthday.replace(/-/g, ''); // Remove hyphens for YYYYMMDD
+                    const formattedBirthday = birthday.replace(/-/g, ''); // YYYYMMDD এর জন্য হাইফেন সরান
                     mecardData += `BDAY:${formattedBirthday};`;
                 }
                 if (street || city || state || zipcode || country) {
@@ -115,10 +135,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (notes) {
                     mecardData += `NOTE:${notes};`;
                 }
-                mecardData += ";"; // End of MECARD data
-
+                mecardData += ";"; // MECARD ডেটার শেষ
                 return mecardData;
-            // END NEW: MECARD Data Generation
             case 'email':
                 const to = document.getElementById('email-to').value;
                 const subject = document.getElementById('email-subject').value;
@@ -149,6 +167,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function generateQRCode() {
         const data = getQrData();
+        const selectedResolution = parseInt(qrResolutionSlider.value); // স্লাইডার থেকে বর্তমান রেজোলিউশন নিন
+
         if (!data || (typeof data === 'string' && !data.trim()) || data.includes('undefined')) {
             downloadPngBtn.style.display = 'none';
             downloadSvgBtn.style.display = 'none';
@@ -156,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Logic for handling gradient colors
+        // গ্রেডিয়েন্ট রঙের জন্য লজিক
         const dotsColor1 = document.getElementById("dots-color").value;
         const dotsColor2 = document.getElementById("dots-color-2").value;
         const dotsOptions = {
@@ -175,6 +195,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         
         const options = {
+            width: selectedResolution,  // নির্বাচিত রেজোলিউশন ব্যবহার করুন
+            height: selectedResolution, // নির্বাচিত রেজোলিউশন ব্যবহার করুন
             data: data,
             image: logoFile,
             dotsOptions: dotsOptions,
@@ -190,6 +212,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         };
         qrCodeInstance.update(options);
+
+        // QR কোড কন্টেইনারের ডিসপ্লে আকার আপডেট করার জন্য JS এর পরিবর্তে CSS এর উপর ভরসা করছি।
+        // যদি কন্টেইনারের ভিতরে জেনারেট হওয়া QR কোড (SVG/Canvas) বড় হয়, তাহলে CSS এর max-width তাকে নিয়ন্ত্রণ করবে।
+        // qrCodeContainer.style.width = `${selectedResolution}px`; // এই লাইনটি সরানো হয়েছে
+        // qrCodeContainer.style.height = `${selectedResolution}px`; // এই লাইনটি সরানো হয়েছে
+
 
         downloadPngBtn.style.display = 'block';
         downloadSvgBtn.style.display = 'block';
@@ -219,8 +247,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // প্রাথমিক অবস্থা সেটআপ
-    document.getElementById('download-btn-png').style.display = 'block';
-    document.getElementById('download-btn-svg').style.display = 'block';
-    document.getElementById('download-btn-jpg').style.display = 'block';
-    generateQRCode();
+    // ডাউনলোড বাটনের প্রাথমিক প্রদর্শন এখন generateQRCode দ্বারা পরিচালিত হয়,
+    // যা DOMContentLoaded এর শেষে একবার কল করা হয়।
+    // প্রাথমিক QR কোড কন্টেইনারের আকার JS দিয়ে সেট করার পরিবর্তে CSS এর উপর ভরসা করছি।
+    // qrCodeContainer.style.width = `${initialResolution}px`; // এই লাইনটি সরানো হয়েছে
+    // qrCodeContainer.style.height = `${initialResolution}px`; // এই লাইনটি সরানো হয়েছে
+
+    generateQRCode(); // ডিফল্ট সেটিংস সহ প্রাথমিক QR কোড জেনারেট করুন
 });

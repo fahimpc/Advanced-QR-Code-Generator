@@ -15,9 +15,9 @@ body {
     padding: 20px;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Changed to flex-start for scroll */
+    align-items: flex-start;
     min-height: 100vh;
-    box-sizing: border-box; /* ADDED: Ensure padding doesn't cause overflow */
+    box-sizing: border-box;
 }
 
 @keyframes gradientBG {
@@ -37,8 +37,7 @@ body {
     animation: rainbowMove 5s linear infinite;
     text-align: center;
     margin-bottom: 20px;
-    /* ADDED: Adjust font size for smaller screens */
-    word-wrap: break-word; /* Ensure long text breaks */
+    word-wrap: break-word;
 }
 
 @keyframes rainbowMove {
@@ -54,19 +53,18 @@ body {
     box-shadow: var(--shadow);
     width: 100%;
     max-width: 1000px;
-    box-sizing: border-box; /* ADDED: Ensure padding doesn't cause overflow */
+    box-sizing: border-box;
 }
 
-/* নতুন ট্যাবের স্টাইল */
 .tabs {
     display: flex;
     margin-bottom: 20px;
     border-bottom: 2px solid var(--border-color);
-    overflow-x: auto; /* Allow tabs to scroll on small screens */
+    overflow-x: auto;
     white-space: nowrap;
-    -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
-    scroll-behavior: smooth; /* Smooth scroll for tabs */
-    padding-bottom: 5px; /* Added space for scrollbar on some OS */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    padding-bottom: 5px;
 }
 .tab-link {
     padding: 10px 20px;
@@ -78,8 +76,8 @@ body {
     font-family: 'Noto Sans Bengali', sans-serif;
     position: relative;
     color: var(--text-color);
-    flex-shrink: 0; /* Prevent tabs from shrinking */
-    transition: color 0.3s ease; /* Smooth transition for active tab color */
+    flex-shrink: 0;
+    transition: color 0.3s ease;
 }
 .tab-link:hover {
     color: var(--primary-color);
@@ -96,7 +94,7 @@ body {
     width: 100%;
     height: 2px;
     background-color: var(--primary-color);
-    transition: width 0.3s ease; /* Smooth transition for underline */
+    transition: width 0.3s ease;
 }
 .tab-content {
     display: none;
@@ -110,13 +108,12 @@ body {
 .main-content {
     display: flex;
     gap: 40px;
-    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
-    justify-content: center; /* Center content when wrapped */
+    flex-wrap: wrap;
+    justify-content: center;
 }
 .input-section {
     flex: 1;
     min-width: 300px;
-    /* ADDED: Max-width to prevent input section from becoming too wide on large screens if output section is small */
     max-width: 100%;
 }
 .output-section {
@@ -126,8 +123,9 @@ body {
     align-items: center;
     justify-content: center;
     min-width: 300px;
-    /* ADDED: Max-width for consistency */
-    max-width: 100%;
+    /* এখানে max-width যোগ/পরিবর্তন করা হয়েছে */
+    max-width: 400px; /* এই মানটি আপনার পছন্দের সাইজ অনুযায়ী পরিবর্তন করতে পারেন */
+    box-sizing: border-box;
 }
 .form-group { margin-bottom: 20px; }
 label { display: block; font-weight: 500; margin-bottom: 8px; }
@@ -135,7 +133,6 @@ input[type="text"], input[type="password"], input[type="tel"], input[type="email
     width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px;
     font-size: 16px; box-sizing: border-box; transition: border-color 0.3s;
     font-family: 'Noto Sans Bengali', sans-serif;
-    /* ADDED: Ensure inputs don't overflow on small screens */
     min-width: 0;
 }
 textarea { resize: vertical; }
@@ -145,121 +142,153 @@ input[type="color"] { width: 100%; height: 45px; border: 1px solid var(--border-
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    /* ADDED: Adjust grid for smaller screens */
 }
 .logo-group {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px; /* Added space between logo input and button */
+    gap: 10px;
 }
 .logo-group input[type="file"] {
-    margin-bottom: 0; /* Remove existing margin to use gap */
+    margin-bottom: 0;
 }
 input[type="file"] { border: none; }
 #download-btn-png, #download-btn-svg, #download-btn-jpg, .utility-btn {
     width: 100%; padding: 15px; background-color: var(--primary-color); color: white;
     border: none; border-radius: 8px; font-size: 18px; font-weight: 500; cursor: pointer;
     transition: background-color 0.3s; margin-top: 10px; font-family: 'Noto Sans Bengali', sans-serif;
-    box-sizing: border-box; /* Ensure padding is included in width */
+    box-sizing: border-box;
 }
 .utility-btn {
     width: auto;
     background-color: #e74c3c;
     padding: 8px 12px;
     font-size: 14px;
-    align-self: flex-start; /* Align to start in column layout */
+    align-self: flex-start;
 }
 #qr-code-canvas {
-    width: 300px;
-    height: 300px;
+    width: 300px; /* এটি একটি ডিফল্ট বা ফলব্যাক সাইজ। JS এটি পরিবর্তন করবে এবং CSS এটিকে সীমাবদ্ধ করবে। */
+    height: 300px; /* এটি একটি ডিফল্ট বা ফলব্যাক সাইজ। JS এটি পরিবর্তন করবে এবং CSS এটিকে সীমাবদ্ধ করবে। */
     border: 1px dashed var(--border-color);
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    /* ADDED: Make canvas fluid within its container */
-    max-width: 100%;
-    height: auto; /* Maintain aspect ratio */
-    aspect-ratio: 1 / 1; /* Ensure it remains square */
+    max-width: 100%; /* এটি নিশ্চিত করবে যে QR কোড তার প্যারেন্ট div এর 100% এর বেশি বড় হবে না */
+    height: auto; /* প্রস্থের সাথে সামঞ্জস্য রেখে উচ্চতা স্বয়ংক্রিয়ভাবে সেট হবে */
+    aspect-ratio: 1 / 1; /* QR কোডটিকে বর্গাকার রাখবে */
+
+    /* এর ভিতরের SVG বা Canvas কেও স্কেল করার জন্য */
+    & > canvas, & > svg {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
 }
 .download-buttons {
     display: flex;
     gap: 10px;
     margin-top: 20px;
-    width: 300px;
-    flex-wrap: wrap; /* Allow buttons to wrap */
-    justify-content: center; /* Center buttons when wrapped */
+    width: 300px; /* আউটপুট সেকশনের max-width এর সাথে সামঞ্জস্যপূর্ণ করুন */
+    flex-wrap: wrap;
+    justify-content: center;
 }
 #download-btn-png { background-color: #2ecc71; }
 #download-btn-svg { background-color: #3498db; }
 #download-btn-jpg { background-color: #f1c40f; color: #333;}
 #download-btn-png:hover, #download-btn-svg:hover, #download-btn-jpg:hover { filter: brightness(0.9); }
 
+/* নতুন যোগ করা স্টাইল */
+.form-group #qr-resolution {
+    width: calc(100% - 20px);
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.form-group #resolution-display {
+    display: inline-block;
+    min-width: 120px;
+    text-align: right;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
 /* --- রেসপনসিভনেস উন্নত করার জন্য নতুন এবং সংশোধিত মিডিয়া কোয়েরি --- */
 
 /* ছোট ডিভাইসের জন্য (যেমন মোবাইল ফোন) */
 @media (max-width: 768px) {
     body {
-        padding: 10px; /* কম প্যাডিং ছোট স্ক্রিনের জন্য */
+        padding: 10px;
     }
 
     .container {
-        padding: 15px; /* কন্টেইনারের প্যাডিং কমানো */
+        padding: 15px;
     }
 
     .rainbow-text {
-        font-size: 1.8rem; /* ছোট স্ক্রিনে ফন্ট সাইজ কমানো */
+        font-size: 1.8rem;
         margin-bottom: 15px;
     }
 
     .main-content {
-        flex-direction: column; /* ইনপুট এবং আউটপুট সেকশন উল্লম্বভাবে সাজানো */
-        gap: 20px; /* ব্যবধান কমানো */
+        flex-direction: column;
+        gap: 20px;
     }
 
     .input-section, .output-section {
-        min-width: unset; /* মিনিমাম উইডথ সরিয়ে ফেলা */
-        width: 100%; /* ফুল উইডথ করে দেওয়া */
+        min-width: unset;
+        width: 100%;
+        max-width: 100%; /* নিশ্চিত করুন max-width ছোট স্ক্রিনেও 100% */
     }
 
     .tabs {
-        justify-content: flex-start; /* ট্যাবগুলো বাম দিকে রাখা */
-        padding-bottom: 8px; /* স্ক্রলবারের জন্য অতিরিক্ত প্যাডিং */
+        justify-content: flex-start;
+        padding-bottom: 8px;
     }
 
     .tab-link {
-        font-size: 14px; /* ছোট স্ক্রিনে ট্যাবের ফন্ট সাইজ কমানো */
+        font-size: 14px;
         padding: 8px 15px;
     }
 
     .options-grid {
-        grid-template-columns: 1fr; /* অপশন গ্রিড এক কলামে করা */
-        gap: 15px; /* ব্যবধান কমানো */
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
 
     .download-buttons {
-        width: 100%; /* ডাউনলোড বাটনগুলো ফুল উইডথ */
-        flex-direction: column; /* বাটনগুলো উল্লম্বভাবে সাজানো */
-        margin-top: 15px; /* মার্জিন কমানো */
+        width: 100%;
+        flex-direction: column;
+        margin-top: 15px;
     }
 
     #qr-code-canvas {
-        width: 100%; /* QR কোড ক্যানভাস ফুল উইডথ */
+        width: 100%;
         height: auto;
-        min-height: 250px; /* QR কোডের একটি নির্দিষ্ট উচ্চতা নিশ্চিত করা */
-        aspect-ratio: 1 / 1; /* আকৃতির অনুপাত 1:1 বজায় রাখা */
+        min-height: 250px;
+        aspect-ratio: 1 / 1;
     }
 
     #download-btn-png, #download-btn-svg, #download-btn-jpg {
-        padding: 12px; /* ডাউনলোডের বাটনের প্যাডিং কমানো */
-        font-size: 16px; /* ফন্ট সাইজ কমানো */
+        padding: 12px;
+        font-size: 16px;
     }
 
     .utility-btn {
-        width: 100%; /* ইউটিলিটি বাটন ফুল উইডথ */
-        text-align: center; /* টেক্সট সেন্টার করা */
+        width: 100%;
+        text-align: center;
+    }
+
+    /* নতুন যোগ করা স্টাইল - ছোট স্ক্রিনের জন্য */
+    .form-group #qr-resolution {
+        width: 100%;
+        margin-right: 0;
+    }
+    .form-group #resolution-display {
+        display: block;
+        text-align: left;
+        margin-top: 5px;
     }
 }
 
@@ -281,8 +310,13 @@ input[type="file"] { border: none; }
         gap: 30px;
     }
 
-    .input-section, .output-section {
-        min-width: 280px; /* কিছুটা সমন্বয় */
+    .input-section {
+        min-width: 280px;
+    }
+    
+    .output-section {
+        min-width: 280px;
+        max-width: 380px; /* মাঝারি স্ক্রিনের জন্য এটি সামঞ্জস্য করা যেতে পারে */
     }
 
     .tabs {
@@ -295,11 +329,11 @@ input[type="file"] { border: none; }
     }
 
     .options-grid {
-        grid-template-columns: 1fr 1fr; /* দুটি কলামে রাখা */
+        grid-template-columns: 1fr 1fr;
     }
 
     .download-buttons {
-        width: 280px; /* আউটপুট সেকশনের সাথে সামঞ্জস্যপূর্ণ */
+        width: 280px;
     }
 }
 
@@ -307,13 +341,13 @@ input[type="file"] { border: none; }
 @media (max-height: 500px) and (max-width: 900px) and (orientation: landscape) {
     body {
         padding: 10px;
-        align-items: center; /* Center content vertically in landscape */
+        align-items: center;
     }
 
     .container {
         padding: 15px;
-        max-height: 95vh; /* Prevent container from overflowing */
-        overflow-y: auto; /* Allow scrolling within container if content is too tall */
+        max-height: 95vh;
+        overflow-y: auto;
     }
 
     .rainbow-text {
@@ -322,14 +356,14 @@ input[type="file"] { border: none; }
     }
 
     .main-content {
-        flex-direction: row; /* পাশাপাশি রাখা */
+        flex-direction: row;
         gap: 20px;
-        flex-wrap: wrap; /* নিশ্চিত করা যে এটি প্রয়োজনে মোড়ানো হয় */
+        flex-wrap: wrap;
     }
 
     .input-section, .output-section {
         flex: 1;
-        min-width: 250px; /* ল্যান্ডস্কেপ মোডের জন্য ছোট min-width */
+        min-width: 250px;
         max-width: 48%; /* Adjust width to fit two columns with gap */
     }
 
@@ -338,8 +372,8 @@ input[type="file"] { border: none; }
     }
 
     .download-buttons {
-        flex-direction: column; /* বাটনগুলো উল্লম্বভাবে সাজানো */
-        width: 100%; /* ফুল উইডথ */
+        flex-direction: column;
+        width: 100%;
     }
 
     #qr-code-canvas {
