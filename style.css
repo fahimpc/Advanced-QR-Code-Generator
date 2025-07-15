@@ -17,6 +17,7 @@ body {
     justify-content: center;
     align-items: flex-start; /* Changed to flex-start for scroll */
     min-height: 100vh;
+    box-sizing: border-box; /* ADDED: Ensure padding doesn't cause overflow */
 }
 
 @keyframes gradientBG {
@@ -36,6 +37,8 @@ body {
     animation: rainbowMove 5s linear infinite;
     text-align: center;
     margin-bottom: 20px;
+    /* ADDED: Adjust font size for smaller screens */
+    word-wrap: break-word; /* Ensure long text breaks */
 }
 
 @keyframes rainbowMove {
@@ -51,6 +54,7 @@ body {
     box-shadow: var(--shadow);
     width: 100%;
     max-width: 1000px;
+    box-sizing: border-box; /* ADDED: Ensure padding doesn't cause overflow */
 }
 
 /* নতুন ট্যাবের স্টাইল */
@@ -58,9 +62,11 @@ body {
     display: flex;
     margin-bottom: 20px;
     border-bottom: 2px solid var(--border-color);
-    /* NEW: Allow tabs to scroll on small screens */
-    overflow-x: auto;
+    overflow-x: auto; /* Allow tabs to scroll on small screens */
     white-space: nowrap;
+    -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
+    scroll-behavior: smooth; /* Smooth scroll for tabs */
+    padding-bottom: 5px; /* Added space for scrollbar on some OS */
 }
 .tab-link {
     padding: 10px 20px;
@@ -72,7 +78,11 @@ body {
     font-family: 'Noto Sans Bengali', sans-serif;
     position: relative;
     color: var(--text-color);
-    flex-shrink: 0; /* NEW: Prevent tabs from shrinking */
+    flex-shrink: 0; /* Prevent tabs from shrinking */
+    transition: color 0.3s ease; /* Smooth transition for active tab color */
+}
+.tab-link:hover {
+    color: var(--primary-color);
 }
 .tab-link.active {
     font-weight: 700;
@@ -86,6 +96,7 @@ body {
     width: 100%;
     height: 2px;
     background-color: var(--primary-color);
+    transition: width 0.3s ease; /* Smooth transition for underline */
 }
 .tab-content {
     display: none;
@@ -99,40 +110,242 @@ body {
 .main-content {
     display: flex;
     gap: 40px;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+    justify-content: center; /* Center content when wrapped */
 }
-.input-section { flex: 1; min-width: 300px; }
-.output-section { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 300px; }
+.input-section {
+    flex: 1;
+    min-width: 300px;
+    /* ADDED: Max-width to prevent input section from becoming too wide on large screens if output section is small */
+    max-width: 100%;
+}
+.output-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 300px;
+    /* ADDED: Max-width for consistency */
+    max-width: 100%;
+}
 .form-group { margin-bottom: 20px; }
 label { display: block; font-weight: 500; margin-bottom: 8px; }
 input[type="text"], input[type="password"], input[type="tel"], input[type="email"], input[type="datetime-local"], textarea, select {
     width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px;
     font-size: 16px; box-sizing: border-box; transition: border-color 0.3s;
     font-family: 'Noto Sans Bengali', sans-serif;
+    /* ADDED: Ensure inputs don't overflow on small screens */
+    min-width: 0;
 }
 textarea { resize: vertical; }
 input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary-color); }
 input[type="color"] { width: 100%; height: 45px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; padding: 5px; }
-.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.logo-group { display: flex; flex-direction: column; align-items: flex-start; }
-.logo-group input { margin-bottom: 10px; }
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    /* ADDED: Adjust grid for smaller screens */
+}
+.logo-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px; /* Added space between logo input and button */
+}
+.logo-group input[type="file"] {
+    margin-bottom: 0; /* Remove existing margin to use gap */
+}
 input[type="file"] { border: none; }
 #download-btn-png, #download-btn-svg, #download-btn-jpg, .utility-btn {
     width: 100%; padding: 15px; background-color: var(--primary-color); color: white;
     border: none; border-radius: 8px; font-size: 18px; font-weight: 500; cursor: pointer;
     transition: background-color 0.3s; margin-top: 10px; font-family: 'Noto Sans Bengali', sans-serif;
+    box-sizing: border-box; /* Ensure padding is included in width */
 }
-.utility-btn { width: auto; background-color: #e74c3c; padding: 8px 12px; font-size: 14px; }
-#qr-code-canvas { width: 300px; height: 300px; border: 1px dashed var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.download-buttons { display: flex; gap: 10px; margin-top: 20px; width: 300px; }
+.utility-btn {
+    width: auto;
+    background-color: #e74c3c;
+    padding: 8px 12px;
+    font-size: 14px;
+    align-self: flex-start; /* Align to start in column layout */
+}
+#qr-code-canvas {
+    width: 300px;
+    height: 300px;
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    /* ADDED: Make canvas fluid within its container */
+    max-width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    aspect-ratio: 1 / 1; /* Ensure it remains square */
+}
+.download-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    width: 300px;
+    flex-wrap: wrap; /* Allow buttons to wrap */
+    justify-content: center; /* Center buttons when wrapped */
+}
 #download-btn-png { background-color: #2ecc71; }
 #download-btn-svg { background-color: #3498db; }
 #download-btn-jpg { background-color: #f1c40f; color: #333;}
 #download-btn-png:hover, #download-btn-svg:hover, #download-btn-jpg:hover { filter: brightness(0.9); }
+
+/* --- রেসপনসিভনেস উন্নত করার জন্য নতুন এবং সংশোধিত মিডিয়া কোয়েরি --- */
+
+/* ছোট ডিভাইসের জন্য (যেমন মোবাইল ফোন) */
 @media (max-width: 768px) {
-    .main-content { flex-direction: column; }
-    .container { padding: 20px; }
-    .options-grid { grid-template-columns: 1fr; }
-    .download-buttons { width: 100%; flex-direction: column; }
-    #qr-code-canvas { width: 100%; height: auto; min-height: 250px; aspect-ratio: 1 / 1; }
+    body {
+        padding: 10px; /* কম প্যাডিং ছোট স্ক্রিনের জন্য */
+    }
+
+    .container {
+        padding: 15px; /* কন্টেইনারের প্যাডিং কমানো */
+    }
+
+    .rainbow-text {
+        font-size: 1.8rem; /* ছোট স্ক্রিনে ফন্ট সাইজ কমানো */
+        margin-bottom: 15px;
+    }
+
+    .main-content {
+        flex-direction: column; /* ইনপুট এবং আউটপুট সেকশন উল্লম্বভাবে সাজানো */
+        gap: 20px; /* ব্যবধান কমানো */
+    }
+
+    .input-section, .output-section {
+        min-width: unset; /* মিনিমাম উইডথ সরিয়ে ফেলা */
+        width: 100%; /* ফুল উইডথ করে দেওয়া */
+    }
+
+    .tabs {
+        justify-content: flex-start; /* ট্যাবগুলো বাম দিকে রাখা */
+        padding-bottom: 8px; /* স্ক্রলবারের জন্য অতিরিক্ত প্যাডিং */
+    }
+
+    .tab-link {
+        font-size: 14px; /* ছোট স্ক্রিনে ট্যাবের ফন্ট সাইজ কমানো */
+        padding: 8px 15px;
+    }
+
+    .options-grid {
+        grid-template-columns: 1fr; /* অপশন গ্রিড এক কলামে করা */
+        gap: 15px; /* ব্যবধান কমানো */
+    }
+
+    .download-buttons {
+        width: 100%; /* ডাউনলোড বাটনগুলো ফুল উইডথ */
+        flex-direction: column; /* বাটনগুলো উল্লম্বভাবে সাজানো */
+        margin-top: 15px; /* মার্জিন কমানো */
+    }
+
+    #qr-code-canvas {
+        width: 100%; /* QR কোড ক্যানভাস ফুল উইডথ */
+        height: auto;
+        min-height: 250px; /* QR কোডের একটি নির্দিষ্ট উচ্চতা নিশ্চিত করা */
+        aspect-ratio: 1 / 1; /* আকৃতির অনুপাত 1:1 বজায় রাখা */
+    }
+
+    #download-btn-png, #download-btn-svg, #download-btn-jpg {
+        padding: 12px; /* ডাউনলোডের বাটনের প্যাডিং কমানো */
+        font-size: 16px; /* ফন্ট সাইজ কমানো */
+    }
+
+    .utility-btn {
+        width: 100%; /* ইউটিলিটি বাটন ফুল উইডথ */
+        text-align: center; /* টেক্সট সেন্টার করা */
+    }
+}
+
+/* মাঝারি ডিভাইসের জন্য (যেমন ট্যাবলেট) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    body {
+        padding: 15px;
+    }
+
+    .container {
+        padding: 25px 30px;
+    }
+
+    .rainbow-text {
+        font-size: 2.2rem;
+    }
+
+    .main-content {
+        gap: 30px;
+    }
+
+    .input-section, .output-section {
+        min-width: 280px; /* কিছুটা সমন্বয় */
+    }
+
+    .tabs {
+        justify-content: flex-start;
+    }
+
+    .tab-link {
+        font-size: 15px;
+        padding: 10px 18px;
+    }
+
+    .options-grid {
+        grid-template-columns: 1fr 1fr; /* দুটি কলামে রাখা */
+    }
+
+    .download-buttons {
+        width: 280px; /* আউটপুট সেকশনের সাথে সামঞ্জস্যপূর্ণ */
+    }
+}
+
+/* ল্যান্ডস্কেপ মোডের ছোট ডিভাইসগুলির জন্য */
+@media (max-height: 500px) and (max-width: 900px) and (orientation: landscape) {
+    body {
+        padding: 10px;
+        align-items: center; /* Center content vertically in landscape */
+    }
+
+    .container {
+        padding: 15px;
+        max-height: 95vh; /* Prevent container from overflowing */
+        overflow-y: auto; /* Allow scrolling within container if content is too tall */
+    }
+
+    .rainbow-text {
+        font-size: 1.6rem;
+        margin-bottom: 10px;
+    }
+
+    .main-content {
+        flex-direction: row; /* পাশাপাশি রাখা */
+        gap: 20px;
+        flex-wrap: wrap; /* নিশ্চিত করা যে এটি প্রয়োজনে মোড়ানো হয় */
+    }
+
+    .input-section, .output-section {
+        flex: 1;
+        min-width: 250px; /* ল্যান্ডস্কেপ মোডের জন্য ছোট min-width */
+        max-width: 48%; /* Adjust width to fit two columns with gap */
+    }
+
+    .tabs {
+        padding-bottom: 5px;
+    }
+
+    .download-buttons {
+        flex-direction: column; /* বাটনগুলো উল্লম্বভাবে সাজানো */
+        width: 100%; /* ফুল উইডথ */
+    }
+
+    #qr-code-canvas {
+        width: 100%;
+        height: auto;
+        min-height: 200px;
+        aspect-ratio: 1 / 1;
+    }
 }
