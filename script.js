@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let logoFile = null;
     let qrCodeInstance = null;
-    let activeTab = 'text-url';
+    let activeTab = 'text-url'; // Initial active tab
 
     // QR কোডের জন্য একটি বেসিক ইনস্ট্যান্স তৈরি
     qrCodeInstance = new QRCodeStyling({
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
         generateQRCode();
     });
 
-    // NEW: Helper function to format date for VEVENT
+    // Helper function to format date for VEVENT
     function formatVEventDate(dateString) {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -66,7 +66,59 @@ document.addEventListener("DOMContentLoaded", () => {
                 const phone = document.getElementById('vcard-phone').value;
                 const emailVcard = document.getElementById('vcard-email').value;
                 return `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${emailVcard}\nEND:VCARD`;
-            // NEW CASES START
+            case 'mecard': // NEW: MECARD Data Generation
+                let mecardData = "MECARD:";
+                const firstName = document.getElementById('mecard-firstname').value;
+                const lastName = document.getElementById('mecard-lastname').value;
+                const nickname = document.getElementById('mecard-nickname').value;
+                const phone1 = document.getElementById('mecard-phone1').value;
+                const phone2 = document.getElementById('mecard-phone2').value;
+                const phone3 = document.getElementById('mecard-phone3').value;
+                const emailMecard = document.getElementById('mecard-email').value;
+                const website = document.getElementById('mecard-website').value;
+                const birthday = document.getElementById('mecard-birthday').value; // YYYY-MM-DD
+                const street = document.getElementById('mecard-street').value;
+                const zipcode = document.getElementById('mecard-zipcode').value;
+                const city = document.getElementById('mecard-city').value;
+                const state = document.getElementById('mecard-state').value;
+                const country = document.getElementById('mecard-country').value;
+                const notes = document.getElementById('mecard-notes').value;
+
+                if (firstName || lastName) {
+                    mecardData += `N:${lastName},${firstName};`;
+                }
+                if (nickname) {
+                    mecardData += `NICKNAME:${nickname};`;
+                }
+                if (phone1) {
+                    mecardData += `TEL:${phone1};`;
+                }
+                if (phone2) {
+                    mecardData += `TEL:${phone2};`;
+                }
+                if (phone3) {
+                    mecardData += `TEL:${phone3};`;
+                }
+                if (emailMecard) {
+                    mecardData += `EMAIL:${emailMecard};`;
+                }
+                if (website) {
+                    mecardData += `URL:${website};`;
+                }
+                if (birthday) {
+                    const formattedBirthday = birthday.replace(/-/g, ''); // Remove hyphens for YYYYMMDD
+                    mecardData += `BDAY:${formattedBirthday};`;
+                }
+                if (street || city || state || zipcode || country) {
+                    mecardData += `ADR:${street},,${city},${state},${zipcode},${country};`;
+                }
+                if (notes) {
+                    mecardData += `NOTE:${notes};`;
+                }
+                mecardData += ";"; // End of MECARD data
+
+                return mecardData;
+            // END NEW: MECARD Data Generation
             case 'email':
                 const to = document.getElementById('email-to').value;
                 const subject = document.getElementById('email-subject').value;
@@ -89,7 +141,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const end = formatVEventDate(document.getElementById('event-end').value);
                 const location = document.getElementById('event-location').value;
                 return `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${summary}\nDTSTART:${start}\nDTEND:${end}\nLOCATION:${location}\nEND:VEVENT\nEND:VCALENDAR`;
-            // NEW CASES END
             case 'text-url':
             default:
                 return document.getElementById("data-input").value.trim();
@@ -105,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // NEW: Logic for handling gradient colors
+        // Logic for handling gradient colors
         const dotsColor1 = document.getElementById("dots-color").value;
         const dotsColor2 = document.getElementById("dots-color-2").value;
         const dotsOptions = {
@@ -126,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const options = {
             data: data,
             image: logoFile,
-            dotsOptions: dotsOptions, // Updated dots options
+            dotsOptions: dotsOptions,
             backgroundOptions: {
                 color: document.getElementById("bg-color").value,
             },
@@ -134,7 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 color: document.getElementById("corner-square-color").value,
                 type: document.getElementById("corner-style").value,
             },
-            // NEW: Adding qrOptions for error correction level
             qrOptions: {
                 errorCorrectionLevel: document.getElementById("error-correction").value
             }

@@ -25,12 +25,12 @@
                     <button class="tab-link active" onclick="openTab(event, 'text-url')">লিংক / টেক্সট</button>
                     <button class="tab-link" onclick="openTab(event, 'wifi')">Wi-Fi</button>
                     <button class="tab-link" onclick="openTab(event, 'vcard')">vCard</button>
-                    <button class="tab-link" onclick="openTab(event, 'email')">ইমেইল</button>
+                    <button class="tab-link" onclick="openTab(event, 'mecard')">MECARD</button> <button class="tab-link" onclick="openTab(event, 'email')">ইমেইল</button>
                     <button class="tab-link" onclick="openTab(event, 'sms')">SMS</button>
                     <button class="tab-link" onclick="openTab(event, 'phone')">ফোন</button>
                     <button class="tab-link" onclick="openTab(event, 'location')">লোকেশন</button>
                     <button class="tab-link" onclick="openTab(event, 'event')">ইভেন্ট</button>
-                    </div>
+                </div>
 
                 <div id="text-url" class="tab-content" style="display: block;">
                     <div class="form-group">
@@ -73,6 +73,68 @@
                     </div>
                 </div>
                 
+                <div id="mecard" class="tab-content">
+                    <div class="form-group">
+                        <label for="mecard-firstname">Firstname:</label>
+                        <input type="text" id="mecard-firstname" placeholder="Enter Firstname">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-lastname">Lastname:</label>
+                        <input type="text" id="mecard-lastname" placeholder="Enter Lastname">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-nickname">Nickname:</label>
+                        <input type="text" id="mecard-nickname" placeholder="Enter Nickname">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-phone1">Phone 1:</label>
+                        <input type="tel" id="mecard-phone1" placeholder="Enter Phone 1">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-phone2">Phone 2:</label>
+                        <input type="tel" id="mecard-phone2" placeholder="Enter Phone 2">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-phone3">Phone 3:</label>
+                        <input type="tel" id="mecard-phone3" placeholder="Enter Phone 3">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-email">Email:</label>
+                        <input type="email" id="mecard-email" placeholder="Enter Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-website">Website:</label>
+                        <input type="text" id="mecard-website" placeholder="Enter Website URL">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-birthday">Birthday:</label>
+                        <input type="text" id="mecard-birthday" placeholder="YYYY-MM-DD">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-street">Street:</label>
+                        <input type="text" id="mecard-street" placeholder="Enter Street">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-zipcode">Zipcode:</label>
+                        <input type="text" id="mecard-zipcode" placeholder="Enter Zipcode">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-city">City:</label>
+                        <input type="text" id="mecard-city" placeholder="Enter City">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-state">State:</label>
+                        <input type="text" id="mecard-state" placeholder="Enter State">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-country">Country:</label>
+                        <input type="text" id="mecard-country" placeholder="Enter Country">
+                    </div>
+                    <div class="form-group">
+                        <label for="mecard-notes">Notes:</label>
+                        <textarea id="mecard-notes" rows="3" placeholder="Additional Notes"></textarea>
+                    </div>
+                </div>
                 <div id="email" class="tab-content">
                     <div class="form-group">
                         <label for="email-to">ইমেইল ঠিকানা:</label>
