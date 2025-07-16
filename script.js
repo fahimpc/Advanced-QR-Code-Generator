@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         dotsOptions: { color: "#000000", type: "square" },
         backgroundOptions: { color: "#ffffff" },
         cornersSquareOptions: { type: "square" },
-        imageOptions: { crossOrigin: "anonymous", margin: 10, imageSize: 0.4 }
+        imageOptions: { crossOrigin: "anonymous", margin: 10, imageSize: 1.6 }
     });
     qrCodeInstance.append(qrCodeContainer);
 
