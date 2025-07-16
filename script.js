@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     // ইনপুট এলিমেন্টগুলো সিলেক্ট করা
-    const allInputs = document.querySelectorAll('.input-section input:not(#qr-resolution), .input-section textarea, .input-section select');
+    const allInputs = document.querySelectorAll('.input-section input:not(#qr-resolution), .input-section textarea, .input-section select'); //
     const logoUpload = document.getElementById("logo-upload");
     const removeLogoBtn = document.getElementById("remove-logo");
     const downloadPngBtn = document.getElementById("download-btn-png");
@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const paypalEmail = document.getElementById('paypal-email').value;
                 const paypalItemName = document.getElementById('paypal-item-name').value;
                 const paypalAmount = document.getElementById('paypal-amount').value;
-                const paypalCurrency = document.getElementById('paypal-currency').value;
+                const paypalCurrency = document.getElementById('paypal-currency').value; //
 
                 let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=${encodeURIComponent(paypalEmail)}`;
                 if (paypalItemName) {
