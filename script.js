@@ -159,6 +159,56 @@ document.addEventListener("DOMContentLoaded", () => {
                 const end = formatVEventDate(document.getElementById('event-end').value);
                 const location = document.getElementById('event-location').value;
                 return `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${summary}\nDTSTART:${start}\nDTEND:${end}\nLOCATION:${location}\nEND:VEVENT\nEND:VCALENDAR`;
+
+            case 'paypal':
+                const paypalEmail = document.getElementById('paypal-email').value;
+                const paypalItemName = document.getElementById('paypal-item-name').value;
+                const paypalAmount = document.getElementById('paypal-amount').value;
+                const paypalCurrency = document.getElementById('paypal-currency').value;
+
+                let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=${encodeURIComponent(paypalEmail)}`;
+                if (paypalItemName) {
+                    paypalUrl += `&item_name=${encodeURIComponent(paypalItemName)}`;
+                }
+                if (paypalAmount) {
+                    paypalUrl += `&amount=${encodeURIComponent(paypalAmount)}`;
+                }
+                if (paypalCurrency) {
+                    paypalUrl += `&currency_code=${encodeURIComponent(paypalCurrency)}`;
+                }
+                return paypalUrl;
+
+            case 'bitcoin':
+                const bitcoinAddress = document.getElementById('bitcoin-address').value;
+                const bitcoinAmount = document.getElementById('bitcoin-amount').value;
+                const bitcoinMessage = document.getElementById('bitcoin-message').value;
+
+                let bitcoinUri = `bitcoin:${bitcoinAddress}`;
+                const params = [];
+                if (bitcoinAmount) {
+                    params.push(`amount=${encodeURIComponent(bitcoinAmount)}`);
+                }
+                if (bitcoinMessage) {
+                    params.push(`message=${encodeURIComponent(bitcoinMessage)}`);
+                }
+                if (params.length > 0) {
+                    bitcoinUri += `?${params.join('&')}`;
+                }
+                return bitcoinUri;
+
+            case 'app-download':
+                const androidUrl = document.getElementById('app-android-url').value;
+                const iosUrl = document.getElementById('app-ios-url').value;
+
+                if (androidUrl && iosUrl) {
+                    return `Android: ${androidUrl}\niOS: ${iosUrl}`;
+                } else if (androidUrl) {
+                    return androidUrl;
+                } else if (iosUrl) {
+                    return iosUrl;
+                }
+                return "";
+
             case 'text-url':
             default:
                 return document.getElementById("data-input").value.trim();
