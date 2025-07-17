@@ -12,6 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const qrResolutionSlider = document.getElementById("qr-resolution");
     const resolutionDisplay = document.getElementById("resolution-display");
 
+    // নোটিফিকেশন মোডাল উপাদান
+    const notificationModalOverlay = document.getElementById("notification-modal-overlay");
+    const notificationCloseBtn = document.querySelector(".notification-close-btn");
+
     let logoFile = null;
     let qrCodeInstance = null;
     let activeTab = 'text-url'; // প্রাথমিক সক্রিয় ট্যাব
@@ -41,11 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
     qrResolutionSlider.addEventListener("input", () => {
         const resolution = qrResolutionSlider.value;
         resolutionDisplay.textContent = `${resolution} x ${resolution} Px`;
-        // ভিজ্যুয়াল প্রতিক্রিয়ার জন্য কন্টেইনারের আকার অবিলম্বে আপডেট করার জন্য
-        // এখানে qrCodeContainer এর CSS width/height সেট না করে শুধুমাত্র QR কোড ইনস্ট্যান্স আপডেট করলে
-        // CSS এর max-width প্রপার্টিটি নিয়ন্ত্রণ করতে পারবে।
-        // qrCodeContainer.style.width = `${resolution}px`; // এই লাইনটি সরিয়ে দেওয়া হয়েছে
-        // qrCodeContainer.style.height = `${resolution}px`; // এই লাইনটি সরিয়ে দেওয়া হয়েছে
         generateQRCode(); // নতুন রেজোলিউশন দিয়ে QR কোড পুনরায় জেনারেট করুন
     });
 
@@ -263,12 +262,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         qrCodeInstance.update(options);
 
-        // QR কোড কন্টেইনারের ডিসপ্লে আকার আপডেট করার জন্য JS এর পরিবর্তে CSS এর উপর ভরসা করছি।
-        // যদি কন্টেইনারের ভিতরে জেনারেট হওয়া QR কোড (SVG/Canvas) বড় হয়, তাহলে CSS এর max-width তাকে নিয়ন্ত্রণ করবে।
-        // qrCodeContainer.style.width = `${selectedResolution}px`; // এই লাইনটি সরানো হয়েছে
-        // qrCodeContainer.style.height = `${selectedResolution}px`; // এই লাইনটি সরানো হয়েছে
-
-
         downloadPngBtn.style.display = 'block';
         downloadSvgBtn.style.display = 'block';
         downloadJpgBtn.style.display = 'block';
@@ -297,11 +290,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // প্রাথমিক অবস্থা সেটআপ
-    // ডাউনলোড বাটনের প্রাথমিক প্রদর্শন এখন generateQRCode দ্বারা পরিচালিত হয়,
-    // যা DOMContentLoaded এর শেষে একবার কল করা হয়।
-    // প্রাথমিক QR কোড কন্টেইনারের আকার JS দিয়ে সেট করার পরিবর্তে CSS এর উপর ভরসা করছি।
-    // qrCodeContainer.style.width = `${initialResolution}px`; // এই লাইনটি সরানো হয়েছে
-    // qrCodeContainer.style.height = `${initialResolution}px`; // এই লাইনটি সরানো হয়েছে
-
     generateQRCode(); // ডিফল্ট সেটিংস সহ প্রাথমিক QR কোড জেনারেট করুন
+
+    // নোটিফিকেশন মোডাল দেখানোর লজিক
+    // সেশন স্টোরেজ ব্যবহার করে নিশ্চিত করা যে মোডালটি প্রতি সেশনে একবারই দেখানো হবে
+    const hasVisited = sessionStorage.getItem('hasVisitedQRGenerator');
+    if (!hasVisited) {
+        notificationModalOverlay.classList.add('active');
+        sessionStorage.setItem('hasVisitedQRGenerator', 'true');
+    }
+
+    // নোটিফিকেশন মোডাল বন্ধ করার লজিক
+    notificationCloseBtn.addEventListener('click', () => {
+        notificationModalOverlay.classList.remove('active');
+    });
+
+    // মোডাল ওভারলেতে ক্লিক করলে বন্ধ করার লজিক (যদি কন্টেন্টের বাইরে ক্লিক করা হয়)
+    notificationModalOverlay.addEventListener('click', (e) => {
+        if (e.target === notificationModalOverlay) {
+            notificationModalOverlay.classList.remove('active');
+        }
+    });
 });
