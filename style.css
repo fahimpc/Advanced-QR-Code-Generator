@@ -429,3 +429,215 @@ input[type="file"] { border: none; }
     vertical-align: middle; /* টেক্সটের সাথে উল্লম্বভাবে সারিবদ্ধ করার জন্য */
     margin-right: 2px; /* সিম্বল এবং '2024' এর মধ্যে সামান্য ব্যবধানের জন্য */
 }
+
+/* FAQs মোডালের জন্য CSS */
+.faq-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.faq-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.faq-content {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh; /* স্ক্রিনের উচ্চতার 90% */
+    overflow-y: auto; /* কন্টেন্ট বেশি হলে স্ক্রল করার জন্য */
+    position: relative;
+    font-family: 'Noto Sans Bengali', sans-serif;
+    color: var(--text-color);
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.faq-content h2 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.faq-content p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.faq-content strong {
+    color: #34495e;
+}
+
+.faq-content ul {
+    margin-bottom: 15px;
+    padding-left: 20px;
+}
+
+.faq-content ul li {
+    margin-bottom: 8px;
+}
+
+.faq-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s ease;
+}
+
+.faq-close-btn:hover {
+    color: #333;
+}
+
+/* ছোট স্ক্রিনের জন্য মোডাল রেসপনসিভনেস */
+@media (max-width: 768px) {
+    .faq-content {
+        padding: 20px;
+        width: 95%; /* মোবাইলে কন্টেন্টের প্রস্থ আরও একটু বাড়ানো হয়েছে */
+        font-size: 0.9em; /* ছোট স্ক্রিনে ফন্ট সাইজ সামান্য কমানো হয়েছে */
+    }
+    .faq-content h2 {
+        font-size: 1.5rem;
+    }
+    .faq-close-btn {
+        font-size: 20px;
+        top: 10px;
+        right: 10px;
+    }
+    .faq-content p, .faq-content ul li {
+        font-size: 0.9em; /* প্যারাগ্রাফ এবং লিস্ট আইটেমের ফন্ট সাইজ কমানো */
+    }
+    .faq-content ul {
+        padding-left: 15px; /* লিস্টের প্যাডিং কমানো */
+        margin-bottom: 10px; /* লিস্টের নিচের মার্জিন কমানো */
+    }
+    .faq-content ul li {
+        margin-bottom: 5px; /* লিস্ট আইটেমের মার্জিন কমানো */
+    }
+}
+@media (max-width: 480px) {
+    .faq-content {
+        padding: 15px;
+        width: 98%; /* আরও ছোট স্ক্রিনের জন্য প্রস্থ বাড়ানো হয়েছে */
+        font-size: 0.85em; /* আরও ছোট স্ক্রিনের জন্য ফন্ট সাইজ কমানো হয়েছে */
+    }
+    .faq-content h2 {
+        font-size: 1.3rem;
+    }
+    .faq-close-btn {
+        font-size: 18px;
+        top: 8px;
+        right: 8px;
+    }
+    .faq-content ul {
+        padding-left: 10px; /* আরও ছোট স্ক্রিনের জন্য লিস্টের প্যাডিং আরও কমানো */
+        margin-bottom: 8px;
+    }
+    .faq-content ul li {
+        margin-bottom: 3px;
+    }
+}
+
+/* FAQs টগল বাটনের স্টাইল */
+.faq-toggle-btn {
+    background-color: #3498db; /* একটি ভিন্ন রঙ ব্যবহার করা হয়েছে */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block; /* এটিকে একটি ব্লক এলিমেন্ট হিসেবে সেট করুন */
+    margin: 15px auto 30px auto; /* h1 এর নিচে এবং main-content এর উপরে মার্জিন */
+    transition: background-color 0.3s ease;
+    font-family: 'Noto Sans Bengali', sans-serif;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.faq-toggle-btn:hover {
+    background-color: #2980b9;
+}
+
+@media (max-width: 768px) {
+    .faq-toggle-btn {
+        width: 90%; /* ছোট স্ক্রিনে বাটনটি আরও চওড়া হবে */
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.animated-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px; /* কন্টেন্টের সাথে ফুটারের ব্যবধান */
+    /* এখানে ব্যাকগ্রাউন্ডের জন্য অ্যানিমেশন প্রপার্টি যোগ করা হচ্ছে */
+    background: linear-gradient(90deg, #ff0066, #6600ff, #00ccff, #00ff99, #ffcc00); /* প্রাথমিক গ্রেডিয়েন্ট রঙ */
+    background-size: 300% 300%; /* ব্যাকগ্রাউন্ডের আকার, যাতে অ্যানিমেশনের জন্য স্থান থাকে */
+    animation: rgbShift 10s ease infinite; /* অ্যানিমেশন প্রপার্টি */
+    color: #030000; /* হালকা টেক্সট রঙ */
+    font-size: 0.9em;
+    border-radius: 8px; /* কন্টেইনারের মতো গোলাকার কোণা */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* হালকা শ্যাডো */
+}
+
+@keyframes rgbShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* যদি ছোট স্ক্রিনে ফুটারের মার্জিন ঠিক করতে হয় */
+@media (max-width: 768px) {
+    .animated-footer {
+        margin-top: 20px;
+        padding: 15px;
+        font-size: 0.8em; /* ছোট স্ক্রিনে ফন্ট সাইজ কমানো */
+    }
+}
+    .animated-footer {
+        margin-top: 20px;
+        padding: 15px;
+    }
+
+    .copyright-symbol {
+    font-size: 1.5em; /* আপনার পছন্দ অনুযায়ী আকার পরিবর্তন করুন */
+    /* উদাহরণস্বরূপ, 1.2em এটিকে তার আশেপাশের টেক্সটের চেয়ে 20% বড় করবে */
+    vertical-align: middle; /* টেক্সটের সাথে উল্লম্বভাবে সারিবদ্ধ করার জন্য */
+    margin-right: 2px; /* সিম্বল এবং '2024' এর মধ্যে সামান্য ব্যবধানের জন্য */
+}
