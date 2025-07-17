@@ -16,8 +16,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     <style>
-        /* নোটিফিকেশন মোডালের জন্য CSS */
-        .notification-modal-overlay {
+        /* FAQs মোডালের জন্য CSS */
+        .faq-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -33,12 +33,12 @@
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        .notification-modal-overlay.active {
+        .faq-overlay.active {
             opacity: 1;
             visibility: visible;
         }
 
-        .notification-modal-content {
+        .faq-content {
             background-color: #ffffff;
             padding: 30px;
             border-radius: 12px;
@@ -64,32 +64,32 @@
             }
         }
 
-        .notification-modal-content h2 {
+        .faq-content h2 {
             font-size: 1.8rem;
             color: var(--primary-color);
             margin-bottom: 20px;
             text-align: center;
         }
 
-        .notification-modal-content p {
+        .faq-content p {
             margin-bottom: 15px;
             line-height: 1.6;
         }
 
-        .notification-modal-content strong {
+        .faq-content strong {
             color: #34495e;
         }
 
-        .notification-modal-content ul {
+        .faq-content ul {
             margin-bottom: 15px;
             padding-left: 20px;
         }
 
-        .notification-modal-content ul li {
+        .faq-content ul li {
             margin-bottom: 8px;
         }
 
-        .notification-close-btn {
+        .faq-close-btn {
             position: absolute;
             top: 15px;
             right: 15px;
@@ -101,42 +101,70 @@
             transition: color 0.3s ease;
         }
 
-        .notification-close-btn:hover {
+        .faq-close-btn:hover {
             color: #333;
         }
 
         /* ছোট স্ক্রিনের জন্য মোডাল রেসপনসিভনেস */
         @media (max-width: 768px) {
-            .notification-modal-content {
+            .faq-content {
                 padding: 20px;
                 width: 95%; /* মোবাইলে কন্টেন্টের প্রস্থ আরও একটু বাড়ানো হয়েছে */
                 font-size: 0.9em; /* ছোট স্ক্রিনে ফন্ট সাইজ সামান্য কমানো হয়েছে */
             }
-            .notification-modal-content h2 {
+            .faq-content h2 {
                 font-size: 1.5rem;
             }
-            .notification-close-btn {
+            .faq-close-btn {
                 font-size: 20px;
                 top: 10px;
                 right: 10px;
             }
         }
         @media (max-width: 480px) {
-            .notification-modal-content {
+            .faq-content {
                 padding: 15px;
                 width: 98%; /* আরও ছোট স্ক্রিনের জন্য প্রস্থ বাড়ানো হয়েছে */
                 font-size: 0.85em; /* আরও ছোট স্ক্রিনের জন্য ফন্ট সাইজ কমানো হয়েছে */
             }
-            .notification-modal-content h2 {
+            .faq-content h2 {
                 font-size: 1.3rem;
             }
-            .notification-close-btn {
+            .faq-close-btn {
                 font-size: 18px;
                 top: 8px;
                 right: 8px;
             }
-            .notification-modal-content ul {
+            .faq-content ul {
                 padding-left: 15px;
+            }
+        }
+
+        /* FAQs টগল বাটনের স্টাইল */
+        .faq-toggle-btn {
+            background-color: #3498db; /* একটি ভিন্ন রঙ ব্যবহার করা হয়েছে */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block; /* এটিকে একটি ব্লক এলিমেন্ট হিসেবে সেট করুন */
+            margin: 15px auto 30px auto; /* h1 এর নিচে এবং main-content এর উপরে মার্জিন */
+            transition: background-color 0.3s ease;
+            font-family: 'Noto Sans Bengali', sans-serif;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .faq-toggle-btn:hover {
+            background-color: #2980b9;
+        }
+
+        @media (max-width: 768px) {
+            .faq-toggle-btn {
+                width: 90%; /* ছোট স্ক্রিনে বাটনটি আরও চওড়া হবে */
+                margin-left: auto;
+                margin-right: auto;
             }
         }
     </style>
@@ -144,6 +172,8 @@
 <body>
     <div class="container">
         <h1 class="rainbow-text">অ্যাডভান্সড QR কোড জেনারেটর</h1>
+        <button id="show-faq-btn" class="faq-toggle-btn">FAQs</button> <!-- নতুন FAQs বাটন -->
+
         <div class="main-content">
             <div class="input-section">
                 <div class="tabs">
@@ -489,9 +519,10 @@
         </div>
     </div>
 
-    <div id="notification-modal-overlay" class="notification-modal-overlay">
-        <div class="notification-modal-content">
-            <button class="notification-close-btn">&times;</button>
+    <!-- FAQs Section (মোডাল হিসেবে প্রদর্শিত হবে) -->
+    <div id="faq-overlay" class="faq-overlay">
+        <div class="faq-content">
+            <button class="faq-close-btn">&times;</button>
             <h2>কিউআর কোড কিভাবে তৈরি করবেন - A to Z গাইড</h2>
             <p>আমাদের অ্যাডভান্সড কিউআর কোড জেনারেটরে আপনাকে স্বাগতম! এখানে আপনি খুব সহজে এবং দ্রুত আপনার নিজস্ব কিউআর কোড তৈরি করতে পারবেন। নিচে ধাপে ধাপে প্রক্রিয়াটি দেখুন:</p>
             <ul>
