@@ -8,13 +8,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const downloadJpgBtn = document.getElementById("download-btn-jpg");
     const qrCodeContainer = document.getElementById("qr-code-canvas");
 
-    // নতুন: রেজোলিউশন উপাদান
+    // রেজোলিউশন উপাদান
     const qrResolutionSlider = document.getElementById("qr-resolution");
     const resolutionDisplay = document.getElementById("resolution-display");
 
-    // নোটিফিকেশন মোডাল উপাদান
-    const notificationModalOverlay = document.getElementById("notification-modal-overlay");
-    const notificationCloseBtn = document.querySelector(".notification-close-btn");
+    // FAQs মোডাল উপাদান
+    const faqOverlay = document.getElementById("faq-overlay");
+    const faqCloseBtn = document.querySelector(".faq-close-btn");
+    const showFaqBtn = document.getElementById("show-faq-btn"); // নতুন FAQs বাটন
 
     let logoFile = null;
     let qrCodeInstance = null;
@@ -41,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         input.addEventListener("input", generateQRCode);
     });
 
-    // নতুন: রেজোলিউশন স্লাইডারের জন্য ইভেন্ট লিসেনার যোগ করুন
+    // রেজোলিউশন স্লাইডারের জন্য ইভেন্ট লিসেনার যোগ করুন
     qrResolutionSlider.addEventListener("input", () => {
         const resolution = qrResolutionSlider.value;
         resolutionDisplay.textContent = `${resolution} x ${resolution} Px`;
@@ -292,19 +293,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // প্রাথমিক অবস্থা সেটআপ
     generateQRCode(); // ডিফল্ট সেটিংস সহ প্রাথমিক QR কোড জেনারেট করুন
 
-    // নোটিফিকেশন মোডাল দেখানোর লজিক
-    // sessionStorage এর লজিকটি সরিয়ে দেওয়া হয়েছে যাতে মোডালটি প্রতিবার ভিজিটে দেখায়।
-    notificationModalOverlay.classList.add('active'); // মোডাল সক্রিয় করুন
+    // FAQs মোডাল দেখানোর লজিক
+    showFaqBtn.addEventListener('click', () => {
+        faqOverlay.classList.add('active');
+    });
 
-    // নোটিফিকেশন মোডাল বন্ধ করার লজিক
-    notificationCloseBtn.addEventListener('click', () => {
-        notificationModalOverlay.classList.remove('active');
+    // FAQs মোডাল বন্ধ করার লজিক
+    faqCloseBtn.addEventListener('click', () => {
+        faqOverlay.classList.remove('active');
     });
 
     // মোডাল ওভারলেতে ক্লিক করলে বন্ধ করার লজিক (যদি কন্টেন্টের বাইরে ক্লিক করা হয়)
-    notificationModalOverlay.addEventListener('click', (e) => {
-        if (e.target === notificationModalOverlay) {
-            notificationModalOverlay.classList.remove('active');
+    faqOverlay.addEventListener('click', (e) => {
+        if (e.target === faqOverlay) {
+            faqOverlay.classList.remove('active');
         }
     });
 });
