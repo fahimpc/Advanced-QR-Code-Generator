@@ -109,7 +109,8 @@
         @media (max-width: 768px) {
             .notification-modal-content {
                 padding: 20px;
-                width: 95%;
+                width: 95%; /* মোবাইলে কন্টেন্টের প্রস্থ আরও একটু বাড়ানো হয়েছে */
+                font-size: 0.9em; /* ছোট স্ক্রিনে ফন্ট সাইজ সামান্য কমানো হয়েছে */
             }
             .notification-modal-content h2 {
                 font-size: 1.5rem;
@@ -118,6 +119,24 @@
                 font-size: 20px;
                 top: 10px;
                 right: 10px;
+            }
+        }
+        @media (max-width: 480px) {
+            .notification-modal-content {
+                padding: 15px;
+                width: 98%; /* আরও ছোট স্ক্রিনের জন্য প্রস্থ বাড়ানো হয়েছে */
+                font-size: 0.85em; /* আরও ছোট স্ক্রিনের জন্য ফন্ট সাইজ কমানো হয়েছে */
+            }
+            .notification-modal-content h2 {
+                font-size: 1.3rem;
+            }
+            .notification-close-btn {
+                font-size: 18px;
+                top: 8px;
+                right: 8px;
+            }
+            .notification-modal-content ul {
+                padding-left: 15px;
             }
         }
     </style>
