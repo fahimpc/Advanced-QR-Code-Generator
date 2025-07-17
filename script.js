@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     // ইনপুট এলিমেন্টগুলো সিলেক্ট করা
-    const allInputs = document.querySelectorAll('.input-section input:not(#qr-resolution), .input-section textarea, .input-section select'); //
+    const allInputs = document.querySelectorAll('.input-section input:not(#qr-resolution), .input-section textarea, .input-section select');
     const logoUpload = document.getElementById("logo-upload");
     const removeLogoBtn = document.getElementById("remove-logo");
     const downloadPngBtn = document.getElementById("download-btn-png");
@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             dotsOptions.color = dotsColor1;
         }
-        
+
         const options = {
             width: selectedResolution,  // নির্বাচিত রেজোলিউশন ব্যবহার করুন
             height: selectedResolution, // নির্বাচিত রেজোলিউশন ব্যবহার করুন
@@ -271,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
     downloadPngBtn.addEventListener('click', () => qrCodeInstance.download({ name: 'qr-code', extension: 'png' }));
     downloadSvgBtn.addEventListener('click', () => qrCodeInstance.download({ name: 'qr-code', extension: 'svg' }));
     downloadJpgBtn.addEventListener('click', () => qrCodeInstance.download({ name: 'qr-code', extension: 'jpeg' }));
-    
+
     // ট্যাবের জন্য গ্লোবাল ফাংশন
     window.openTab = (evt, tabName) => {
         activeTab = tabName;
@@ -293,12 +293,8 @@ document.addEventListener("DOMContentLoaded", () => {
     generateQRCode(); // ডিফল্ট সেটিংস সহ প্রাথমিক QR কোড জেনারেট করুন
 
     // নোটিফিকেশন মোডাল দেখানোর লজিক
-    // সেশন স্টোরেজ ব্যবহার করে নিশ্চিত করা যে মোডালটি প্রতি সেশনে একবারই দেখানো হবে
-    const hasVisited = sessionStorage.getItem('hasVisitedQRGenerator');
-    if (!hasVisited) {
-        notificationModalOverlay.classList.add('active');
-        sessionStorage.setItem('hasVisitedQRGenerator', 'true');
-    }
+    // sessionStorage এর লজিকটি সরিয়ে দেওয়া হয়েছে যাতে মোডালটি প্রতিবার ভিজিটে দেখায়।
+    notificationModalOverlay.classList.add('active'); // মোডাল সক্রিয় করুন
 
     // নোটিফিকেশন মোডাল বন্ধ করার লজিক
     notificationCloseBtn.addEventListener('click', () => {
