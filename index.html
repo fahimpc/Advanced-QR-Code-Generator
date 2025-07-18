@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced QR Code Generator - Free, Fast & Customizable</title>
-    <meta name="description" content="Create advanced QR codes for WiFi, vCards, links and more with our free and customizable QR code generator. Fast, secure, and perfect for personal or business use.">
-    <meta name="keywords" content="advanced qr code generator, free qr code maker, wifi qr code, vcard qr code, customizable qr code, qr generator online">
+    <meta name="description" content="Create highly customizable QR codes for WiFi, vCards, text, URLs, emails, SMS, phone numbers, locations, events, PayPal, Bitcoin, and app downloads. Our free online QR code generator offers advanced design options including custom colors, gradients, dot styles, corner styles, logo integration, and adjustable resolution for high-quality PNG, SVG, and JPG downloads.">
+    <meta name="keywords" content="advanced QR code generator, free QR code maker, customizable QR code, QR code for WiFi, vCard QR code, email QR code, SMS QR code, phone QR code, location QR code, event QR code, PayPal QR code, Bitcoin QR code, app download QR code, QR code with logo, QR code colors, gradient QR code, high resolution QR code, PNG QR code, SVG QR code, JPG QR code, online QR generator">
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Advanced QR Code Generator">
     <meta property="og:description" content="Fast & free QR code generator with design options. Create QR codes for any purpose.">
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* FAQs মোডালের জন্য CSS */
         .faq-overlay {
@@ -167,14 +168,37 @@
                 margin-right: auto;
             }
         }
+
+        /* Social Media Icons Styling */
+        .social-links {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            color: #ffffff; /* আইকনের রঙ */
+            font-size: 2.2em; /* আইকনের আকার */
+            margin: 0 15px;
+            transition: transform 0.3s ease, color 0.3s ease;
+            display: inline-block; /* যাতে মার্জিন সঠিকভাবে কাজ করে */
+        }
+
+        .social-links a:hover {
+            transform: scale(1.2); /* হোভারে একটু বড় হবে */
+            color: #d4d4d4; /* হোভারে হালকা রঙ পরিবর্তন */
+        }
+
+        /* Specific colors for icons */
+        .social-links a.facebook-icon:hover { color: #3b5998; }
+        .social-links a.instagram-icon:hover { color: #E1306C; }
+        .social-links a.telegram-icon:hover { color: #0088cc; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="rainbow-text">অ্যাডভান্সড QR কোড জেনারেটর</h1>
-        <button id="show-faq-btn" class="faq-toggle-btn">FAQs</button> <!-- নতুন FAQs বাটন -->
-
-        <div class="main-content">
+        <button id="show-faq-btn" class="faq-toggle-btn">FAQs</button> <div class="main-content">
             <div class="input-section">
                 <div class="tabs">
                     <button class="tab-link active" onclick="openTab(event, 'text-url')">লিংক / টেক্সট</button>
@@ -511,15 +535,27 @@
                     <button id="download-btn-jpg">JPG ডাউনলোড</button>
                 </div>
             </div>
+
+            <div class="social-links">
+                <a href="https://www.facebook.com/Fahim1256" target="_blank" aria-label="Facebook Profile" class="facebook-icon">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/fh_assifx_bro/" target="_blank" aria-label="Instagram Profile" class="instagram-icon">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://t.me/Growth_Assif" target="_blank" aria-label="Telegram Channel" class="telegram-icon">
+                    <i class="fab fa-telegram-plane"></i>
+                </a>
+            </div>
+
             <footer>
-    <div class="site-footer animated-footer">
-        <span class="copyright-symbol">&copy;</span> 2025 Advanced QR Code Generator All Rights Reserved.
-    </div>
-</footer>
+                <div class="site-footer animated-footer">
+                    <span class="copyright-symbol">&copy;</span> 2025 Advanced QR Code Generator All Rights Reserved.
+                </div>
+            </footer>
         </div>
     </div>
 
-    <!-- FAQs Section (মোডাল হিসেবে প্রদর্শিত হবে) -->
     <div id="faq-overlay" class="faq-overlay">
         <div class="faq-content">
             <button class="faq-close-btn">&times;</button>
