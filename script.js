@@ -1,312 +1,575 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // ইনপুট এলিমেন্টগুলো সিলেক্ট করা
-    const allInputs = document.querySelectorAll('.input-section input:not(#qr-resolution), .input-section textarea, .input-section select');
+    // UI Elements
+    const stepPanels = document.querySelectorAll(".step-panel");
+    const stepIndicators = document.querySelectorAll(".step-indicator");
+    const nextStepBtns = document.querySelectorAll(".next-step-btn");
+    const prevStepBtns = document.querySelectorAll(".prev-step-btn");
+    const startOverBtn = document.querySelector(".start-over-btn");
+    const qrTypeCards = document.querySelectorAll(".qr-type-card");
+    const dataInputTabs = document.querySelectorAll(".data-input-tab");
+    const qrCodeContainer = document.getElementById("qr-code-canvas");
+    const barcodeDisplay = document.getElementById("barcode-display");
+    const previewPlaceholderText = document.querySelector(".preview-placeholder-text");
+
+    // Form Inputs & Controls
+    const allInputs = document.querySelectorAll('.input-form input, .input-form textarea, .input-form select');
+    const qrResolutionSlider = document.getElementById("qr-resolution");
+    const resolutionDisplay = document.getElementById("resolution-display");
     const logoUpload = document.getElementById("logo-upload");
     const removeLogoBtn = document.getElementById("remove-logo");
+
+    // Download Buttons
     const downloadPngBtn = document.getElementById("download-btn-png");
     const downloadSvgBtn = document.getElementById("download-btn-svg");
     const downloadJpgBtn = document.getElementById("download-btn-jpg");
-    const qrCodeContainer = document.getElementById("qr-code-canvas");
 
-    // রেজোলিউশন উপাদান
-    const qrResolutionSlider = document.getElementById("qr-resolution");
-    const resolutionDisplay = document.getElementById("resolution-display");
-
-    // FAQs মোডাল উপাদান
+    // FAQ Modal Elements
     const faqOverlay = document.getElementById("faq-overlay");
     const faqCloseBtn = document.querySelector(".faq-close-btn");
-    const showFaqBtn = document.getElementById("show-faq-btn"); // নতুন FAQs বাটন
+    const showFaqBtn = document.getElementById("show-faq-btn");
 
+    // Mobile Menu
+    const menuToggle = document.querySelector(".menu-toggle");
+    const mainNav = document.querySelector(".main-nav");
+
+    let currentStep = 1;
+    let selectedQrType = 'text-url'; // Default selected QR type
     let logoFile = null;
-    let qrCodeInstance = null;
-    let activeTab = 'text-url'; // প্রাথমিক সক্রিয় ট্যাব
+    let qrCodeInstance = null; // Stores the QRCodeStyling instance
 
-    // প্রাথমিক রেজোলিউশন মান
-    const initialResolution = parseInt(qrResolutionSlider.value);
-    resolutionDisplay.textContent = `${initialResolution} x ${initialResolution} Px`;
-
-    // QR কোডের জন্য একটি বেসিক ইনস্ট্যান্স তৈরি
-    qrCodeInstance = new QRCodeStyling({
-        width: initialResolution, // স্লাইডারের প্রাথমিক মান ব্যবহার করুন
-        height: initialResolution, // স্লাইডারের প্রাথমিক মান ব্যবহার করুন
-        data: "https://advancedqrcodegenerator.xyz/",
-        dotsOptions: { color: "#000000", type: "square" },
-        backgroundOptions: { color: "#ffffff" },
-        cornersSquareOptions: { type: "square" },
-        imageOptions: { crossOrigin: "anonymous", margin: 10, imageSize: 1.6 }
-    });
-    qrCodeInstance.append(qrCodeContainer);
-
-    // লাইভ আপডেটের জন্য ইভেন্ট লিসেনার
-    allInputs.forEach(input => {
-        input.addEventListener("input", generateQRCode);
-    });
-
-    // রেজোলিউশন স্লাইডারের জন্য ইভেন্ট লিসেনার যোগ করুন
-    qrResolutionSlider.addEventListener("input", () => {
-        const resolution = qrResolutionSlider.value;
-        resolutionDisplay.textContent = `${resolution} x ${resolution} Px`;
-        generateQRCode(); // নতুন রেজোলিউশন দিয়ে QR কোড পুনরায় জেনারেট করুন
-    });
-
-    logoUpload.addEventListener("change", (e) => {
-        if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                logoFile = event.target.result;
-                generateQRCode();
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    });
-
-    removeLogoBtn.addEventListener("click", () => {
-        logoFile = null;
-        logoUpload.value = '';
-        generateQRCode();
-    });
-
-    // Helper function to format date for VEVENT
-    function formatVEventDate(dateString) {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        // YYYYMMDDTHHMMSSZ ফরম্যাটে রূপান্তর, হাইফেন, কোলন এবং মিলিসেকেন্ড বাদ দিয়ে
-        return date.toISOString().replace(/[-:]/g, "").split('.')[0] + 'Z';
+    // --- Initialization ---
+    function initializeGenerator() {
+        showStep(currentStep);
+        updateStepIndicators();
+        activateQrType('text-url'); // Activate default on load
+        // Initial generation based on default type and empty data
+        // This will show the placeholder until data is entered
+        generateCode(); 
+        removeLogoBtn.style.display = 'none'; // Hide remove logo button initially
     }
 
-    function getQrData() {
-        switch (activeTab) {
-            case 'wifi':
-                const ssid = document.getElementById('wifi-ssid').value;
-                const pass = document.getElementById('wifi-pass').value;
-                const enc = document.getElementById('wifi-encryption').value;
-                return `WIFI:T:${enc};S:${ssid};P:${pass};;`;
-            case 'vcard':
-                const name = document.getElementById('vcard-name').value;
-                const phone = document.getElementById('vcard-phone').value;
-                const emailVcard = document.getElementById('vcard-email').value;
-                return `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${emailVcard}\nEND:VCARD`;
-            case 'mecard':
-                let mecardData = "MECARD:";
-                const firstName = document.getElementById('mecard-firstname').value;
-                const lastName = document.getElementById('mecard-lastname').value;
-                const nickname = document.getElementById('mecard-nickname').value;
-                const phone1 = document.getElementById('mecard-phone1').value;
-                const phone2 = document.getElementById('mecard-phone2').value;
-                const phone3 = document.getElementById('mecard-phone3').value;
-                const emailMecard = document.getElementById('mecard-email').value;
-                const website = document.getElementById('mecard-website').value;
-                const birthday = document.getElementById('mecard-birthday').value; // YYYY-MM-DD
-                const street = document.getElementById('mecard-street').value;
-                const zipcode = document.getElementById('mecard-zipcode').value;
-                const city = document.getElementById('mecard-city').value;
-                const state = document.getElementById('mecard-state').value;
-                const country = document.getElementById('mecard-country').value;
-                const notes = document.getElementById('mecard-notes').value;
+    // --- Step Navigation Logic ---
+    function showStep(stepNum) {
+        stepPanels.forEach(panel => panel.classList.remove('active'));
+        document.getElementById(`step-${stepNum}`).classList.add('active');
+        currentStep = stepNum;
+        updateStepIndicators();
+        updatePreviewVisibility(); // Update preview visibility on step change
+    }
 
-                if (firstName || lastName) {
-                    mecardData += `N:${lastName},${firstName};`;
-                }
-                if (nickname) {
-                    mecardData += `NICKNAME:${nickname};`;
-                }
-                if (phone1) {
-                    mecardData += `TEL:${phone1};`;
-                }
-                if (phone2) {
-                    mecardData += `TEL:${phone2};`;
-                }
-                if (phone3) {
-                    mecardData += `TEL:${phone3};`;
-                }
-                if (emailMecard) {
-                    mecardData += `EMAIL:${emailMecard};`;
-                }
-                if (website) {
-                    mecardData += `URL:${website};`;
-                }
-                if (birthday) {
-                    const formattedBirthday = birthday.replace(/-/g, ''); // YYYYMMDD এর জন্য হাইফেন সরান
-                    mecardData += `BDAY:${formattedBirthday};`;
-                }
-                if (street || city || state || zipcode || country) {
-                    mecardData += `ADR:${street},,${city},${state},${zipcode},${country};`;
-                }
-                if (notes) {
-                    mecardData += `NOTE:${notes};`;
-                }
-                mecardData += ";"; // MECARD ডেটার শেষ
-                return mecardData;
-            case 'email':
-                const to = document.getElementById('email-to').value;
-                const subject = document.getElementById('email-subject').value;
-                const body = document.getElementById('email-body').value;
-                return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            case 'sms':
-                const smsTo = document.getElementById('sms-to').value;
-                const smsBody = document.getElementById('sms-body').value;
-                return `SMSTO:${smsTo}:${encodeURIComponent(smsBody)}`;
-            case 'phone':
-                const tel = document.getElementById('phone-number').value;
-                return `tel:${tel}`;
-            case 'location':
-                const lat = document.getElementById('loc-lat').value;
-                const lon = document.getElementById('loc-lon').value;
-                return `geo:${lat},${lon}`;
-            case 'event':
-                const summary = document.getElementById('event-summary').value;
-                const start = formatVEventDate(document.getElementById('event-start').value);
-                const end = formatVEventDate(document.getElementById('event-end').value);
-                const location = document.getElementById('event-location').value;
-                return `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${summary}\nDTSTART:${start}\nDTEND:${end}\nLOCATION:${location}\nEND:VEVENT\nEND:VCALENDAR`;
+    function updateStepIndicators() {
+        stepIndicators.forEach((indicator, index) => {
+            indicator.classList.remove('active', 'completed');
+            if (index + 1 === currentStep) {
+                indicator.classList.add('active');
+            } else if (index + 1 < currentStep) {
+                indicator.classList.add('completed');
+            }
+        });
 
-            case 'paypal':
-                const paypalEmail = document.getElementById('paypal-email').value;
-                const paypalItemName = document.getElementById('paypal-item-name').value;
-                const paypalAmount = document.getElementById('paypal-amount').value;
-                const paypalCurrency = document.getElementById('paypal-currency').value; //
+        // Set line width for completed steps
+        const stepLines = document.querySelectorAll('.step-line');
+        stepLines.forEach((line, index) => {
+            // Line should be active if its corresponding next step is active or completed
+            if (index + 2 <= currentStep) {
+                line.style.background = 'linear-gradient(90deg, var(--primary-green), var(--primary-blue))';
+            } else {
+                line.style.background = 'var(--border-light)';
+            }
+        });
+    }
 
-                let paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=${encodeURIComponent(paypalEmail)}`;
-                if (paypalItemName) {
-                    paypalUrl += `&item_name=${encodeURIComponent(paypalItemName)}`;
-                }
-                if (paypalAmount) {
-                    paypalUrl += `&amount=${encodeURIComponent(paypalAmount)}`;
-                }
-                if (paypalCurrency) {
-                    paypalUrl += `&currency_code=${encodeURIComponent(paypalCurrency)}`;
-                }
-                return paypalUrl;
+    // --- QR Type Selection Logic (Step 1) ---
+    function activateQrType(type) {
+        qrTypeCards.forEach(card => card.classList.remove('active'));
+        const selectedCard = document.querySelector(`.qr-type-card[data-type="${type}"]`);
+        if (selectedCard) {
+            selectedCard.classList.add('active');
+            selectedQrType = type;
+            showDataInputTab(type); // Show corresponding input form
+            generateCode(); // Regenerate code based on new type
+        }
+    }
 
-            case 'bitcoin':
-                const bitcoinAddress = document.getElementById('bitcoin-address').value;
-                const bitcoinAmount = document.getElementById('bitcoin-amount').value;
-                const bitcoinMessage = document.getElementById('bitcoin-message').value;
+    function showDataInputTab(type) {
+        dataInputTabs.forEach(tab => tab.classList.remove('active'));
+        const targetTab = document.getElementById(`${type}-tab`);
+        if (targetTab) {
+            targetTab.classList.add('active');
+        }
+    }
 
-                let bitcoinUri = `bitcoin:${bitcoinAddress}`;
-                const params = [];
-                if (bitcoinAmount) {
-                    params.push(`amount=${encodeURIComponent(bitcoinAmount)}`);
-                }
-                if (bitcoinMessage) {
-                    params.push(`message=${encodeURIComponent(bitcoinMessage)}`);
-                }
-                if (params.length > 0) {
-                    bitcoinUri += `?${params.join('&')}`;
-                }
-                return bitcoinUri;
+    // --- Unified Code Generation Trigger ---
+    function generateCode() {
+        if (selectedQrType === 'barcode') {
+            generateBarcode();
+        } else {
+            generateQRCode();
+        }
+        updatePreviewVisibility(); // Always ensure correct preview is visible after generation
+    }
 
-            case 'app-download':
-                const androidUrl = document.getElementById('app-android-url').value;
-                const iosUrl = document.getElementById('app-ios-url').value;
+    // --- Preview Panel Control ---
+    function updatePreviewVisibility() {
+        if (currentStep < 2 || !getDataForType(selectedQrType)) { // No preview if on step 1 or no data
+            qrCodeContainer.style.display = 'none';
+            barcodeDisplay.style.display = 'none';
+            previewPlaceholderText.style.display = 'block';
+        } else {
+            previewPlaceholderText.style.display = 'none';
+            if (selectedQrType === 'barcode') {
+                qrCodeContainer.style.display = 'none';
+                barcodeDisplay.style.display = 'block';
+            } else {
+                qrCodeContainer.style.display = 'flex'; // Use flex for centering
+                barcodeDisplay.style.display = 'none';
+            }
+        }
+    }
 
-                if (androidUrl && iosUrl) {
-                    return `Android: ${androidUrl}\niOS: ${iosUrl}`;
-                } else if (androidUrl) {
-                    return androidUrl;
-                } else if (iosUrl) {
-                    return iosUrl;
-                }
-                return "";
-
+    // Helper to get data based on active type
+    function getDataForType(type) {
+        let data = "";
+        switch (type) {
             case 'text-url':
-            default:
-                return document.getElementById("data-input").value.trim();
+                data = document.getElementById("text-url-input").value;
+                break;
+            case 'wifi':
+                const ssid = document.getElementById("wifi-ssid").value;
+                const password = document.getElementById("wifi-password").value;
+                const encryption = document.getElementById("wifi-encryption").value;
+                const hidden = document.getElementById("wifi-hidden").checked ? 'true' : 'false';
+                data = `WIFI:S:${ssid};T:${encryption};P:${password};H:${hidden};`;
+                break;
+            case 'vcard':
+                const firstName = document.getElementById("vcard-firstname").value;
+                const lastName = document.getElementById("vcard-lastname").value;
+                const organization = document.getElementById("vcard-organization").value;
+                const title = document.getElementById("vcard-title").value;
+                const phone = document.getElementById("vcard-phone").value;
+                const email = document.getElementById("vcard-email").value;
+                const address = document.getElementById("vcard-address").value;
+                const website = document.getElementById("vcard-website").value;
+
+                if (!firstName && !lastName && !organization && !title && !phone && !email && !address && !website) return ""; // Require at least one field
+                
+                data = `BEGIN:VCARD\nVERSION:3.0\nN:${lastName};${firstName}\n`;
+                if (organization) data += `ORG:${organization}\n`;
+                if (title) data += `TITLE:${title}\n`;
+                if (phone) data += `TEL:${phone}\n`;
+                if (email) data += `EMAIL:${email}\n`;
+                if (address) data += `ADR:;;${address}\n`;
+                if (website) data += `URL:${website}\n`;
+                data += `END:VCARD`;
+                break;
+            case 'email':
+                const emailTo = document.getElementById("email-to").value;
+                const emailSubject = encodeURIComponent(document.getElementById("email-subject").value);
+                const emailBody = encodeURIComponent(document.getElementById("email-body").value);
+                data = `mailto:${emailTo}?subject=${emailSubject}&body=${emailBody}`;
+                break;
+            case 'sms':
+                const smsPhone = document.getElementById("sms-phone").value;
+                const smsMessage = encodeURIComponent(document.getElementById("sms-message").value);
+                data = `SMSTO:${smsPhone}:${smsMessage}`;
+                break;
+            case 'phone':
+                data = `tel:${document.getElementById("phone-number").value}`;
+                break;
+            case 'location':
+                const latitude = document.getElementById("location-latitude").value;
+                const longitude = document.getElementById("location-longitude").value;
+                data = `geo:${latitude},${longitude}`;
+                break;
+            case 'event':
+                const eventTitle = encodeURIComponent(document.getElementById("event-title").value);
+                const eventLocation = encodeURIComponent(document.getElementById("event-location").value);
+                const eventStartInput = document.getElementById("event-start").value;
+                const eventEndInput = document.getElementById("event-end").value;
+                const eventDescription = encodeURIComponent(document.getElementById("event-description").value);
+
+                let eventStart = '';
+                let eventEnd = '';
+
+                if (eventStartInput) {
+                    const dateObj = new Date(eventStartInput);
+                    if (!isNaN(dateObj.getTime())) { // Check for valid date
+                        eventStart = dateObj.toISOString().replace(/[-:]|\.\d{3}/g, '').split('.')[0] + 'Z'; // Format to UTC Zulu time
+                    }
+                }
+                if (eventEndInput) {
+                    const dateObj = new Date(eventEndInput);
+                    if (!isNaN(dateObj.getTime())) { // Check for valid date
+                        eventEnd = dateObj.toISOString().replace(/[-:]|\.\d{3}/g, '').split('.')[0] + 'Z'; // Format to UTC Zulu time
+                    }
+                }
+
+                if (!eventTitle && !eventLocation && !eventStart && !eventEnd && !eventDescription) return ""; // Require at least one field
+
+                data = `BEGIN:VEVENT\nSUMMARY:${eventTitle}\nLOCATION:${eventLocation}\n`;
+                if (eventStart) data += `DTSTART:${eventStart}\n`;
+                if (eventEnd) data += `DTEND:${eventEnd}\n`;
+                if (eventDescription) data += `DESCRIPTION:${eventDescription}\n`;
+                data += `END:VEVENT`;
+                break;
+            case 'paypal':
+                const paypalEmail = document.getElementById("paypal-email").value;
+                const paypalAmount = document.getElementById("paypal-amount").value;
+                const paypalItem = encodeURIComponent(document.getElementById("paypal-item").value);
+                if (!paypalEmail && !paypalAmount && !paypalItem) return "";
+                data = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${paypalEmail}&amount=${paypalAmount}&item_name=${paypalItem}`;
+                break;
+            case 'bitcoin':
+                const bitcoinAddress = document.getElementById("bitcoin-address").value;
+                const bitcoinAmount = document.getElementById("bitcoin-amount").value;
+                const bitcoinMessage = encodeURIComponent(document.getElementById("bitcoin-message").value);
+                if (!bitcoinAddress && !bitcoinAmount && !bitcoinMessage) return "";
+                data = `bitcoin:${bitcoinAddress}?amount=${bitcoinAmount}&message=${bitcoinMessage}`;
+                break;
+            case 'app-download':
+                const androidUrl = document.getElementById("app-android-url").value;
+                const iosUrl = document.getElementById("app-ios-url").value;
+                if (!androidUrl && !iosUrl) return "";
+                let appData = '';
+                if (androidUrl) appData += `ANDROID:${androidUrl}\n`;
+                if (iosUrl) appData += `IOS:${iosUrl}\n`;
+                data = appData;
+                break;
+            case 'barcode':
+                data = document.getElementById("barcode-data").value;
+                break;
         }
+        return data;
     }
 
+    // QR Code Generation
     function generateQRCode() {
-        const data = getQrData();
-        const selectedResolution = parseInt(qrResolutionSlider.value); // স্লাইডার থেকে বর্তমান রেজোলিউশন নিন
-
-        if (!data || (typeof data === 'string' && !data.trim()) || data.includes('undefined')) {
-            downloadPngBtn.style.display = 'none';
-            downloadSvgBtn.style.display = 'none';
-            downloadJpgBtn.style.display = 'none';
+        const data = getDataForType(selectedQrType);
+        
+        // Clear previous QR code if no data
+        if (!data) {
+            if (qrCodeInstance) {
+                qrCodeInstance.clear(); // Clear the QR code if no data
+                qrCodeInstance = null; // Reset instance
+            }
+            qrCodeContainer.innerHTML = ''; // Ensure div is empty
             return;
         }
 
-        // গ্রেডিয়েন্ট রঙের জন্য লজিক
-        const dotsColor1 = document.getElementById("dots-color").value;
-        const dotsColor2 = document.getElementById("dots-color-2").value;
-        const dotsOptions = {
-            type: document.getElementById("dots-style").value,
-        };
-        if (dotsColor1 !== dotsColor2) {
-            dotsOptions.gradient = {
-                type: document.getElementById("gradient-type").value,
-                colorStops: [
-                    { offset: 0, color: dotsColor1 },
-                    { offset: 1, color: dotsColor2 }
-                ]
-            };
-        } else {
-            dotsOptions.color = dotsColor1;
-        }
-
         const options = {
-            width: selectedResolution,  // নির্বাচিত রেজোলিউশন ব্যবহার করুন
-            height: selectedResolution, // নির্বাচিত রেজোলিউশন ব্যবহার করুন
-            data: data,
+            width: parseInt(qrResolutionSlider.value),
+            height: parseInt(qrResolutionSlider.value),
+            data: data, // Ensure data is set here
             image: logoFile,
-            dotsOptions: dotsOptions,
+            dotsOptions: {
+                color: document.getElementById("qr-color").value,
+                type: document.getElementById("qr-dot-style").value
+            },
             backgroundOptions: {
-                color: document.getElementById("bg-color").value,
+                color: document.getElementById("qr-bg-color").value,
             },
             cornersSquareOptions: {
-                color: document.getElementById("corner-square-color").value,
-                type: document.getElementById("corner-style").value,
+                color: document.getElementById("qr-color").value,
+                type: document.getElementById("qr-corner-style").value
             },
-            qrOptions: {
-                errorCorrectionLevel: document.getElementById("error-correction").value
+            cornersDotOptions: {
+                color: document.getElementById("qr-color").value,
+                type: document.getElementById("qr-corner-style").value
+            },
+            imageOptions: {
+                crossOrigin: "anonymous",
+                margin: 5
             }
         };
-        qrCodeInstance.update(options);
 
-        downloadPngBtn.style.display = 'block';
-        downloadSvgBtn.style.display = 'block';
-        downloadJpgBtn.style.display = 'block';
+        const gradientType = document.getElementById("qr-gradient-type").value;
+        if (gradientType !== 'none') {
+            const gradientColors = [
+                { offset: 0, color: document.getElementById("qr-gradient-color1").value },
+                { offset: 1, color: document.getElementById("qr-gradient-color2").value }
+            ];
+            options.dotsOptions.gradient = {
+                type: gradientType,
+                rotation: 0, 
+                colorStops: gradientColors
+            };
+            options.cornersSquareOptions.gradient = {
+                type: gradientType,
+                rotation: 0,
+                colorStops: gradientColors
+            };
+            options.cornersDotOptions.gradient = {
+                type: gradientType,
+                rotation: 0,
+                colorStops: gradientColors
+            };
+        } else {
+            // Remove gradient options if 'none' is selected
+            delete options.dotsOptions.gradient;
+            delete options.cornersSquareOptions.gradient;
+            delete options.cornersDotOptions.gradient;
+        }
+
+        if (qrCodeInstance) {
+            qrCodeInstance.update(options);
+        } else {
+            qrCodeInstance = new QRCodeStyling(options);
+            qrCodeInstance.append(qrCodeContainer);
+        }
     }
 
-    // ডাউনলোড বাটনগুলোর জন্য ইভেন্ট লিসেনার
-    downloadPngBtn.addEventListener('click', () => qrCodeInstance.download({ name: 'qr-code', extension: 'png' }));
-    downloadSvgBtn.addEventListener('click', () => qrCodeInstance.download({ name: 'qr-code', extension: 'svg' }));
-    downloadJpgBtn.addEventListener('click', () => qrCodeInstance.download({ name: 'qr-code', extension: 'jpeg' }));
+    // Barcode Generation
+    function generateBarcode() {
+        const barcodeDataInput = document.getElementById("barcode-data");
+        const barcodeTypeSelect = document.getElementById("barcode-type");
+        const barcodeDisplayValueCheckbox = document.getElementById("barcode-display-value");
+        const data = barcodeDataInput.value;
+        const type = barcodeTypeSelect.value;
+        const displayValue = barcodeDisplayValueCheckbox.checked;
 
-    // ট্যাবের জন্য গ্লোবাল ফাংশন
-    window.openTab = (evt, tabName) => {
-        activeTab = tabName;
-        let i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tab-content");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
+        barcodeDisplay.innerHTML = ''; // Clear previous barcode or error message
+
+        if (!data) {
+            return; // Don't generate if no data
         }
-        tablinks = document.getElementsByClassName("tab-link");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
+
+        try {
+            // JsBarcode target can be an SVG element or a canvas.
+            // We want to append to the existing barcodeDisplay SVG.
+            JsBarcode(barcodeDisplay, data, {
+                format: type,
+                displayValue: displayValue,
+                lineColor: "#000000",
+                background: "#ffffff",
+                width: 2, // Width of a single bar
+                height: 100, // Height of the barcode
+                // Add an empty SVG to the barcodeDisplay container first
+                // JsBarcode will then populate this SVG.
+                // This might be redundant if barcodeDisplay is already an SVG element.
+                // Let's ensure barcodeDisplay is an SVG from the HTML side if possible,
+                // or clear its content if it's a div and append an SVG here.
+            });
+            // JsBarcode automatically appends an SVG if the target is a DOM element.
+            // If barcodeDisplay is already an SVG, it will draw into it.
+            // If it's a div, it will create and append an SVG.
+
+        } catch (error) {
+            console.error("Barcode generation error:", error);
+            barcodeDisplay.innerHTML = `<p class="error-text" style="color: red; text-align: center;">বারকোড তৈরি করা যায়নি। অনুগ্রহ করে ডেটা এবং ফরম্যাট পরীক্ষা করুন। (${error.message})</p>`;
         }
-        document.getElementById(tabName).style.display = "block";
-        evt.currentTarget.className += " active";
-        generateQRCode(); // ট্যাব পরিবর্তন হলেও QR কোড আপডেট হবে
     }
 
-    // প্রাথমিক অবস্থা সেটআপ
-    generateQRCode(); // ডিফল্ট সেটিংস সহ প্রাথমিক QR কোড জেনারেট করুন
+    // --- Download Functions ---
+    function downloadQRCode(format) {
+        if (qrCodeInstance && selectedQrType !== 'barcode' && getDataForType(selectedQrType)) {
+            qrCodeInstance.download({ name: `qr-code-${selectedQrType}`, extension: format });
+        } else {
+            alert("কোনো QR কোড তৈরি হয়নি অথবা আপনি বারকোড ট্যাবে আছেন বা ডেটা প্রবেশ করাননি!");
+        }
+    }
 
-    // FAQs মোডাল দেখানোর লজিক
+    function downloadBarcode(format) {
+        const barcodeSVG = barcodeDisplay.querySelector('svg'); // Get the SVG element generated by JsBarcode
+        const barcodeData = document.getElementById("barcode-data").value || "barcode";
+
+        if (barcodeSVG && selectedQrType === 'barcode' && getDataForType(selectedQrType)) {
+            if (format === 'svg') {
+                const svgData = new XMLSerializer().serializeToString(barcodeSVG);
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                const svgUrl = URL.createObjectURL(svgBlob);
+                const downloadLink = document.createElement('a');
+                downloadLink.href = svgUrl;
+                downloadLink.download = `${barcodeData}.svg`;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(svgUrl);
+            } else { // PNG or JPG
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                const svgData = new XMLSerializer().serializeToString(barcodeSVG);
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                const svgUrl = URL.createObjectURL(svgBlob);
+
+                img.onload = () => {
+                    // Set canvas dimensions based on image, add some padding
+                    const padding = 20; // Add some padding around the barcode
+                    canvas.width = img.width + padding * 2;
+                    canvas.height = img.height + padding * 2;
+                    
+                    ctx.fillStyle = "#ffffff"; // White background
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, padding, padding); // Draw image with padding
+                    
+                    const dataURL = canvas.toDataURL(`image/${format === 'jpeg' ? 'jpeg' : 'png'}`);
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = dataURL;
+                    downloadLink.download = `${barcodeData}.${format}`;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                    URL.revokeObjectURL(svgUrl);
+                };
+                img.onerror = (err) => {
+                    console.error("Error loading SVG for barcode conversion:", err);
+                    alert("বারকোড ডাউনলোডে সমস্যা হয়েছে।");
+                };
+                img.src = svgUrl;
+            }
+        } else {
+            alert("কোনো বারকোড তৈরি হয়নি অথবা আপনি QR কোড ট্যাবে আছেন বা ডেটা প্রবেশ করাননি!");
+        }
+    }
+
+    // --- Event Listeners ---
+
+    // Mobile Menu Toggle
+    menuToggle.addEventListener('click', () => {
+        mainNav.classList.toggle('active');
+    });
+
+    // Step 1: QR Type Selection
+    qrTypeCards.forEach(card => {
+        card.addEventListener('click', () => {
+            activateQrType(card.dataset.type);
+        });
+    });
+
+    // Step Navigation Buttons
+    nextStepBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const stepToAdvance = parseInt(btn.dataset.step);
+            if (stepToAdvance < 4) { // Max step is 4
+                showStep(stepToAdvance + 1);
+            }
+        });
+    });
+
+    prevStepBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const stepToGoBack = parseInt(btn.dataset.step);
+            if (stepToGoBack > 1) { // Min step is 1
+                showStep(stepToGoBack - 1);
+            }
+        });
+    });
+
+    startOverBtn.addEventListener('click', () => {
+        // Reset all inputs to their default values (simple approach)
+        allInputs.forEach(input => {
+            if (input.type === 'checkbox') {
+                input.checked = false;
+            } else if (input.tagName === 'SELECT') {
+                input.selectedIndex = 0;
+            } else {
+                input.value = '';
+            }
+        });
+        qrResolutionSlider.value = 500;
+        resolutionDisplay.textContent = '500x500';
+        document.getElementById("qr-color").value = '#000000';
+        document.getElementById("qr-bg-color").value = '#ffffff';
+        document.getElementById("qr-dot-style").value = 'square';
+        document.getElementById("qr-corner-style").value = 'square';
+        document.getElementById("qr-gradient-type").value = 'none';
+        document.getElementById("qr-gradient-color1").value = '#000000';
+        document.getElementById("qr-gradient-color2").value = '#000000';
+        logoFile = null;
+        logoUpload.value = ''; // Reset file input
+        removeLogoBtn.style.display = 'none';
+
+        // Clear existing QR/barcode
+        if (qrCodeInstance) {
+            qrCodeInstance.clear();
+            qrCodeInstance = null;
+        }
+        barcodeDisplay.innerHTML = '';
+        qrCodeContainer.innerHTML = ''; // Ensure canvas is cleared too
+        
+        initializeGenerator(); // Re-initialize to step 1 and default state
+    });
+
+    // Input changes trigger generation
+    allInputs.forEach(input => {
+        input.addEventListener('input', () => {
+            generateCode(); // Call unified generation function
+        });
+        // Special case for color inputs and selects as they are 'input' but need immediate feedback
+        if (input.type === 'color' || input.tagName === 'SELECT' || input.type === 'checkbox') {
+            input.addEventListener('change', () => {
+                generateCode(); // Call unified generation function
+            });
+        }
+    });
+
+    qrResolutionSlider.addEventListener('input', () => {
+        resolutionDisplay.textContent = `${qrResolutionSlider.value}x${qrResolutionSlider.value}`;
+        generateQRCode(); // Only QR code changes resolution
+    });
+
+    // Logo Upload
+    logoUpload.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                logoFile = e.target.result;
+                generateQRCode(); // Always generate QR code when logo is uploaded
+                removeLogoBtn.style.display = 'inline-block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Remove Logo
+    removeLogoBtn.addEventListener('click', () => {
+        logoFile = null;
+        logoUpload.value = ''; // Reset file input
+        generateQRCode(); // Update QR code without logo
+        removeLogoBtn.style.display = 'none';
+    });
+
+    // Download Buttons
+    downloadPngBtn.addEventListener('click', () => {
+        if (selectedQrType === 'barcode') {
+            downloadBarcode('png');
+        } else {
+            downloadQRCode('png');
+        }
+    });
+
+    downloadSvgBtn.addEventListener('click', () => {
+        if (selectedQrType === 'barcode') {
+            downloadBarcode('svg');
+        } else {
+            downloadQRCode('svg');
+        }
+    });
+
+    downloadJpgBtn.addEventListener('click', () => {
+        if (selectedQrType === 'barcode') {
+            downloadBarcode('jpeg'); // Use 'jpeg' for JPG format
+        } else {
+            downloadQRCode('jpeg');
+        }
+    });
+
+    // FAQ Modal
     showFaqBtn.addEventListener('click', () => {
         faqOverlay.classList.add('active');
     });
 
-    // FAQs মোডাল বন্ধ করার লজিক
     faqCloseBtn.addEventListener('click', () => {
         faqOverlay.classList.remove('active');
     });
 
-    // মোডাল ওভারলেতে ক্লিক করলে বন্ধ করার লজিক (যদি কন্টেন্টের বাইরে ক্লিক করা হয়)
     faqOverlay.addEventListener('click', (e) => {
         if (e.target === faqOverlay) {
             faqOverlay.classList.remove('active');
         }
     });
+
+    // Initial setup
+    initializeGenerator();
 });
