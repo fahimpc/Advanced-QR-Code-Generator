@@ -279,7 +279,8 @@ document.addEventListener("DOMContentLoaded", () => {
             imageOptions: {
                 crossOrigin: "anonymous",
                 margin: 5
-            }
+            },
+            responsive: true,
         };
 
         const gradientType = document.getElementById("qr-gradient-type").value;
@@ -334,8 +335,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            // JsBarcode target can be an SVG element or a canvas.
-            // We want to append to the existing barcodeDisplay SVG.
             JsBarcode(barcodeDisplay, data, {
                 format: type,
                 displayValue: displayValue,
@@ -343,16 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 background: "#ffffff",
                 width: 2, // Width of a single bar
                 height: 100, // Height of the barcode
-                // Add an empty SVG to the barcodeDisplay container first
-                // JsBarcode will then populate this SVG.
-                // This might be redundant if barcodeDisplay is already an SVG element.
-                // Let's ensure barcodeDisplay is an SVG from the HTML side if possible,
-                // or clear its content if it's a div and append an SVG here.
             });
-            // JsBarcode automatically appends an SVG if the target is a DOM element.
-            // If barcodeDisplay is already an SVG, it will draw into it.
-            // If it's a div, it will create and append an SVG.
-
         } catch (error) {
             console.error("Barcode generation error:", error);
             barcodeDisplay.innerHTML = `<p class="error-text" style="color: red; text-align: center;">বারকোড তৈরি করা যায়নি। অনুগ্রহ করে ডেটা এবং ফরম্যাট পরীক্ষা করুন। (${error.message})</p>`;
@@ -503,10 +493,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    qrResolutionSlider.addEventListener('input', () => {
+    // Debounce function for better performance on slider input
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            const context = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
+
+    // Modified qrResolutionSlider event listener to use debounce
+    qrResolutionSlider.addEventListener('input', debounce(() => {
         resolutionDisplay.textContent = `${qrResolutionSlider.value}x${qrResolutionSlider.value}`;
         generateQRCode(); // Only QR code changes resolution
-    });
+    }, 300)); // 300ms debounce delay
 
     // Logo Upload
     logoUpload.addEventListener('change', (event) => {
