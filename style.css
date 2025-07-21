@@ -1,443 +1,736 @@
+/* Core Styles & Variables */
 :root {
-    --primary-color: #4a90e2;
-    --text-color: #333;
-    --border-color: #dfe4ea;
-    --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --primary-blue: #007bff; /* A vibrant blue for primary actions */
+    --primary-green: #28a745; /* A complementary green */
+    --accent-color: #6f42c1; /* A rich purple for accents */
+    --text-dark: #343a40; /* Dark text for readability */
+    --text-light: #6c757d; /* Lighter text for descriptions */
+    --bg-light: #f8f9fa; /* Light background for sections */
+    --border-light: #e9ecef; /* Light border for elements */
+    --shadow-light: rgba(0, 0, 0, 0.08); /* Subtle shadow for depth */
+    --shadow-medium: rgba(0, 0, 0, 0.15); /* Medium shadow for interactive elements */
+    --border-radius-small: 8px;
+    --border-radius-medium: 12px;
+    --border-radius-large: 25px; /* For pills and large buttons */
+    --font-primary: 'Poppins', sans-serif;
+    --font-secondary: 'Noto Sans Bengali', sans-serif;
 }
 
+/* Base Body Styles */
 body {
-    background: linear-gradient(-45deg, #ff0066, #6600ff, #00ccff, #00ff99, #ffcc00);
-    background-size: 600% 600%;
-    animation: gradientBG 20s ease infinite;
-    font-family: 'Noto Sans Bengali', sans-serif;
-    color: var(--text-color);
     margin: 0;
-    padding: 20px;
+    font-family: var(--font-primary);
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+    line-height: 1.6;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
     min-height: 100vh;
-    box-sizing: border-box;
 }
 
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-.rainbow-text {
-    font-size: 2.5rem;
-    font-weight: bold;
-    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
-    background-size: 400%;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: rainbowMove 5s linear infinite;
-    text-align: center;
-    margin-bottom: 20px;
-    word-wrap: break-word;
-}
-
-@keyframes rainbowMove {
-    0% { background-position: 0%; }
-    100% { background-position: 400%; }
-}
-
+/* Utility Classes */
 .container {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(8px);
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
     width: 100%;
-    max-width: 1000px;
     box-sizing: border-box;
 }
 
-.tabs {
-    display: flex;
-    margin-bottom: 20px;
-    border-bottom: 2px solid var(--border-color);
-    overflow-x: auto;
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    padding-bottom: 5px;
+/* Header */
+.main-header {
+    background: linear-gradient(90deg, var(--primary-blue), var(--accent-color));
+    color: white;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px var(--shadow-medium);
 }
-.tab-link {
-    padding: 10px 20px;
-    cursor: pointer;
-    border: none;
-    background-color: transparent;
-    font-size: 16px;
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.8em;
+    font-weight: 700;
+    transition: transform 0.3s ease;
+}
+
+.logo a:hover {
+    transform: scale(1.05);
+}
+
+.main-nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 25px;
     font-weight: 500;
-    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 1.05em;
     position: relative;
-    color: var(--text-color);
-    flex-shrink: 0;
+    padding-bottom: 5px;
     transition: color 0.3s ease;
 }
-.tab-link:hover {
-    color: var(--primary-color);
-}
-.tab-link.active {
-    font-weight: 700;
-    color: var(--primary-color);
-}
-.tab-link.active::after {
+
+.main-nav a::after {
     content: '';
     position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
+    width: 0;
     height: 2px;
-    background-color: var(--primary-color);
+    display: block;
+    margin-top: 5px;
+    right: 0;
+    background: white;
     transition: width 0.3s ease;
 }
-.tab-content {
+
+.main-nav a:hover::after {
+    width: 100%;
+    left: 0;
+    background: white;
+}
+
+.menu-toggle {
     display: none;
-    animation: fadeIn 0.5s;
-}
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.main-content {
-    display: flex;
-    gap: 40px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-.input-section {
-    flex: 1;
-    min-width: 300px;
-    max-width: 100%;
-}
-.output-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-width: 300px;
-    /* এখানে max-width যোগ/পরিবর্তন করা হয়েছে */
-    max-width: 400px; /* এই মানটি আপনার পছন্দের সাইজ অনুযায়ী পরিবর্তন করতে পারেন */
-    box-sizing: border-box;
-}
-.form-group { margin-bottom: 20px; }
-label { display: block; font-weight: 500; margin-bottom: 8px; }
-input[type="text"], input[type="password"], input[type="tel"], input[type="email"], input[type="datetime-local"], textarea, select {
-    width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px;
-    font-size: 16px; box-sizing: border-box; transition: border-color 0.3s;
-    font-family: 'Noto Sans Bengali', sans-serif;
-    min-width: 0;
-}
-textarea { resize: vertical; }
-input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary-color); }
-input[type="color"] { width: 100%; height: 45px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; padding: 5px; }
-.options-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-.logo-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-}
-.logo-group input[type="file"] {
-    margin-bottom: 0;
-}
-input[type="file"] { border: none; }
-#download-btn-png, #download-btn-svg, #download-btn-jpg, .utility-btn {
-    width: 100%; padding: 15px; background-color: var(--primary-color); color: white;
-    border: none; border-radius: 8px; font-size: 18px; font-weight: 500; cursor: pointer;
-    transition: background-color 0.3s; margin-top: 10px; font-family: 'Noto Sans Bengali', sans-serif;
-    box-sizing: border-box;
-}
-.utility-btn {
-    width: auto;
-    background-color: #e74c3c;
-    padding: 8px 12px;
-    font-size: 14px;
-    align-self: flex-start;
-}
-#qr-code-canvas {
-    width: 300px; /* এটি একটি ডিফল্ট বা ফলব্যাক সাইজ। JS এটি পরিবর্তন করবে এবং CSS এটিকে সীমাবদ্ধ করবে। */
-    height: 300px; /* এটি একটি ডিফল্ট বা ফলব্যাক সাইজ। JS এটি পরিবর্তন করবে এবং CSS এটিকে সীমাবদ্ধ করবে। */
-    border: 1px dashed var(--border-color);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    max-width: 100%; /* এটি নিশ্চিত করবে যে QR কোড তার প্যারেন্ট div এর 100% এর বেশি বড় হবে না */
-    height: auto; /* প্রস্থের সাথে সামঞ্জস্য রেখে উচ্চতা স্বয়ংক্রিয়ভাবে সেট হবে */
-    aspect-ratio: 1 / 1; /* QR কোডটিকে বর্গাকার রাখবে */
-
-    /* এর ভিতরের SVG বা Canvas কেও স্কেল করার জন্য */
-    & > canvas, & > svg {
-        max-width: 100%;
-        height: auto;
-        display: block;
-    }
-}
-.download-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    width: 300px; /* আউটপুট সেকশনের max-width এর সাথে সামঞ্জস্যপূর্ণ করুন */
-    flex-wrap: wrap;
-    justify-content: center;
-}
-#download-btn-png { background-color: #2ecc71; }
-#download-btn-svg { background-color: #3498db; }
-#download-btn-jpg { background-color: #f1c40f; color: #333;}
-#download-btn-png:hover, #download-btn-svg:hover, #download-btn-jpg:hover { filter: brightness(0.9); }
-
-/* নতুন যোগ করা স্টাইল */
-.form-group #qr-resolution {
-    width: calc(100% - 20px);
-    margin-right: 10px;
-    vertical-align: middle;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.8em;
+    cursor: pointer;
 }
 
-.form-group #resolution-display {
-    display: inline-block;
-    min-width: 120px;
-    text-align: right;
-    font-weight: 500;
-    color: var(--primary-color);
-}
-
-/* --- রেসপনসিভনেস উন্নত করার জন্য নতুন এবং সংশোধিত মিডিয়া কোয়েরি --- */
-
-/* ছোট ডিভাইসের জন্য (যেমন মোবাইল ফোন) */
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-
-    .container {
-        padding: 15px;
-    }
-
-    .rainbow-text {
-        font-size: 1.8rem;
-        margin-bottom: 15px;
-    }
-
-    .main-content {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .input-section, .output-section {
-        min-width: unset;
-        width: 100%;
-        max-width: 100%; /* নিশ্চিত করুন max-width ছোট স্ক্রিনেও 100% */
-    }
-
-    .tabs {
-        justify-content: flex-start;
-        padding-bottom: 8px;
-    }
-
-    .tab-link {
-        font-size: 14px;
-        padding: 8px 15px;
-    }
-
-    .options-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .download-buttons {
-        width: 100%;
-        flex-direction: column;
-        margin-top: 15px;
-    }
-
-    #qr-code-canvas {
-        width: 100%;
-        height: auto;
-        min-height: 250px;
-        aspect-ratio: 1 / 1;
-    }
-
-    #download-btn-png, #download-btn-svg, #download-btn-jpg {
-        padding: 12px;
-        font-size: 16px;
-    }
-
-    .utility-btn {
-        width: 100%;
-        text-align: center;
-    }
-
-    /* নতুন যোগ করা স্টাইল - ছোট স্ক্রিনের জন্য */
-    .form-group #qr-resolution {
-        width: 100%;
-        margin-right: 0;
-    }
-    .form-group #resolution-display {
-        display: block;
-        text-align: left;
-        margin-top: 5px;
-    }
-}
-
-/* মাঝারি ডিভাইসের জন্য (যেমন ট্যাবলেট) */
-@media (min-width: 769px) and (max-width: 1024px) {
-    body {
-        padding: 15px;
-    }
-
-    .container {
-        padding: 25px 30px;
-    }
-
-    .rainbow-text {
-        font-size: 2.2rem;
-    }
-
-    .main-content {
-        gap: 30px;
-    }
-
-    .input-section {
-        min-width: 280px;
-    }
-    
-    .output-section {
-        min-width: 280px;
-        max-width: 380px; /* মাঝারি স্ক্রিনের জন্য এটি সামঞ্জস্য করা যেতে পারে */
-    }
-
-    .tabs {
-        justify-content: flex-start;
-    }
-
-    .tab-link {
-        font-size: 15px;
-        padding: 10px 18px;
-    }
-
-    .options-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .download-buttons {
-        width: 280px;
-    }
-}
-
-/* ল্যান্ডস্কেপ মোডের ছোট ডিভাইসগুলির জন্য */
-@media (max-height: 500px) and (max-width: 900px) and (orientation: landscape) {
-    body {
-        padding: 10px;
-        align-items: center;
-    }
-
-    .container {
-        padding: 15px;
-        max-height: 95vh;
-        overflow-y: auto;
-    }
-
-    .rainbow-text {
-        font-size: 1.6rem;
-        margin-bottom: 10px;
-    }
-
-    .main-content {
-        flex-direction: row;
-        gap: 20px;
-        flex-wrap: wrap;
-    }
-
-    .input-section, .output-section {
-        flex: 1;
-        min-width: 250px;
-        max-width: 48%; /* Adjust width to fit two columns with gap */
-    }
-
-    .tabs {
-        padding-bottom: 5px;
-    }
-
-    .download-buttons {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    #qr-code-canvas {
-        width: 100%;
-        height: auto;
-        min-height: 200px;
-        aspect-ratio: 1 / 1;
-    }
-}
-
-.animated-footer {
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #1a75ff, #00c6ff);
+    color: white;
+    padding: 80px 0;
     text-align: center;
-    padding: 20px;
-    margin-top: 40px; /* কন্টেন্টের সাথে ফুটারের ব্যবধান */
-    /* এখানে ব্যাকগ্রাউন্ডের জন্য অ্যানিমেশন প্রপার্টি যোগ করা হচ্ছে */
-    background: linear-gradient(90deg, #ff0066, #6600ff, #00ccff, #00ff99, #ffcc00); /* প্রাথমিক গ্রেডিয়েন্ট রঙ */
-    background-size: 300% 300%; /* ব্যাকগ্রাউন্ডের আকার, যাতে অ্যানিমেশনের জন্য স্থান থাকে */
-    animation: rgbShift 10s ease infinite; /* অ্যানিমেশন প্রপার্টি */
-    color: #030000; /* হালকা টেক্সট রঙ */
+    box-shadow: inset 0 -5px 15px rgba(0,0,0,0.1);
+}
+
+.hero-section h1 {
+    font-size: 3.2em;
+    margin-bottom: 15px;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.hero-section p {
+    font-size: 1.3em;
+    opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Generator Container */
+.generator-container {
+    background-color: white;
+    border-radius: var(--border-radius-medium);
+    box-shadow: 0 10px 30px var(--shadow-light);
+    margin: 40px auto;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Step Indicators */
+.generator-steps {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    position: relative;
+    padding: 0 20px; /* Add padding to ensure lines don't touch edges */
+}
+
+.step-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.step-indicator span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--border-light);
+    color: var(--text-light);
+    font-weight: 600;
+    font-size: 1.2em;
+    transition: all 0.3s ease;
+    border: 2px solid var(--border-light);
+}
+
+.step-indicator p {
+    margin-top: 8px;
     font-size: 0.9em;
-    border-radius: 8px; /* কন্টেইনারের মতো গোলাকার কোণা */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* হালকা শ্যাডো */
+    color: var(--text-light);
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
-@keyframes rgbShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+.step-indicator.active span {
+    background: linear-gradient(45deg, var(--primary-blue), var(--accent-color));
+    color: white;
+    border-color: var(--primary-blue);
+    box-shadow: 0 4px 10px var(--shadow-medium);
 }
 
-/* যদি ছোট স্ক্রিনে ফুটারের মার্জিন ঠিক করতে হয় */
-@media (max-width: 768px) {
-    .animated-footer {
-        margin-top: 20px;
-        padding: 15px;
-        font-size: 0.8em; /* ছোট স্ক্রিনে ফন্ট সাইজ কমানো */
-    }
-}
-    .animated-footer {
-        margin-top: 20px;
-        padding: 15px;
-    }
-
-    .copyright-symbol {
-    font-size: 1.5em; /* আপনার পছন্দ অনুযায়ী আকার পরিবর্তন করুন */
-    /* উদাহরণস্বরূপ, 1.2em এটিকে তার আশেপাশের টেক্সটের চেয়ে 20% বড় করবে */
-    vertical-align: middle; /* টেক্সটের সাথে উল্লম্বভাবে সারিবদ্ধ করার জন্য */
-    margin-right: 2px; /* সিম্বল এবং '2024' এর মধ্যে সামান্য ব্যবধানের জন্য */
+.step-indicator.active p {
+    color: var(--primary-blue);
+    font-weight: 600;
 }
 
-/* FAQs মোডালের জন্য CSS */
+.step-indicator.completed span {
+    background: var(--primary-green);
+    color: white;
+    border-color: var(--primary-green);
+}
+
+.step-indicator.completed p {
+    color: var(--primary-green);
+}
+
+.step-line {
+    position: absolute;
+    height: 4px;
+    background-color: var(--border-light);
+    left: 0; /* Adjusted to fill the gap */
+    right: 0; /* Adjusted to fill the gap */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 0;
+    margin: 0 40px; /* Adjust margin to start and end between indicators */
+}
+
+/* Generator Panels */
+.generator-panels {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.left-panel {
+    flex: 3;
+    min-width: 300px;
+    background-color: var(--bg-light);
+    padding: 25px;
+    border-radius: var(--border-radius-medium);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+}
+
+.right-panel {
+    flex: 2;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: var(--border-radius-medium);
+    box-shadow: 0 5px 20px var(--shadow-light);
+    position: sticky;
+    top: 100px; /* Adjust based on header height */
+    align-self: flex-start; /* Keeps it at the top */
+}
+
+/* Step Panels */
+.step-panel {
+    display: none;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.step-panel.active {
+    display: block;
+}
+
+.step-panel h2 {
+    font-size: 1.8em;
+    color: var(--primary-blue);
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* QR Type Grid (Step 1) */
+.qr-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.qr-type-card {
+    background-color: white;
+    border: 2px solid var(--border-light);
+    border-radius: var(--border-radius-small);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.qr-type-card:hover {
+    border-color: var(--primary-blue);
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+.qr-type-card.active {
+    border-color: var(--primary-blue);
+    background-color: #e6f2ff; /* Light blue background for active */
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.qr-type-card i {
+    font-size: 2.5em;
+    color: var(--primary-blue);
+    margin-bottom: 10px;
+}
+
+.qr-type-card h3 {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    color: var(--text-dark);
+}
+
+.qr-type-card p {
+    font-size: 0.85em;
+    color: var(--text-light);
+}
+
+/* Input Form (Step 2) */
+.input-form h3 {
+    font-size: 1.4em;
+    color: var(--primary-blue);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.input-form h3 i {
+    margin-right: 10px;
+}
+
+.data-input-tab {
+    display: none;
+    padding: 10px 0;
+}
+
+.data-input-tab.active {
+    display: block;
+}
+
+.input-form input[type="text"],
+.input-form input[type="email"],
+.input-form input[type="tel"],
+.input-form input[type="password"],
+.input-form input[type="number"],
+.input-form input[type="datetime-local"],
+.input-form textarea,
+.input-form select {
+    width: 100%;
+    padding: 12px 18px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius-large); /* Rounded inputs */
+    font-size: 1em;
+    color: var(--text-dark);
+    background-color: white;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.input-form input:focus,
+.input-form textarea:focus,
+.input-form select:focus {
+    border-color: var(--primary-blue);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.input-form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.input-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+/* Checkbox specific styling */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-weight: normal;
+    font-size: 0.95em;
+    color: var(--text-dark);
+}
+
+.checkbox-container input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-blue);
+    border-radius: 4px;
+    margin-right: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.checkbox-container input[type="checkbox"]:checked {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+
+.checkbox-container input[type="checkbox"]:checked::after {
+    content: '\2713'; /* Checkmark */
+    font-size: 14px;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Design Options (Step 3) */
+.design-options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.design-group {
+    background-color: white;
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius-small);
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.design-group h4 {
+    color: var(--primary-blue);
+    font-size: 1.3em;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 10px;
+}
+
+.design-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-dark);
+    font-size: 0.95em;
+}
+
+.design-group input[type="color"] {
+    width: 100%;
+    height: 40px;
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius-small);
+    padding: 3px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.design-group select {
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius-small);
+    font-size: 1em;
+    color: var(--text-dark);
+    background-color: white;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.design-group select:focus {
+    border-color: var(--primary-blue);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.design-group input[type="range"] {
+    width: 100%;
+    appearance: none;
+    height: 8px;
+    background: var(--border-light);
+    border-radius: 5px;
+    outline: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.design-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary-blue), var(--accent-color));
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.design-group input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary-blue), var(--accent-color));
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#resolution-display {
+    display: block;
+    text-align: center;
+    font-size: 0.9em;
+    color: var(--text-light);
+    margin-top: 5px;
+}
+
+.upload-btn, .remove-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: var(--border-radius-large);
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+}
+
+.upload-btn {
+    background: linear-gradient(45deg, var(--primary-green), #66bb6a);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+}
+
+.upload-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(40, 167, 69, 0.3);
+}
+
+.remove-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+}
+
+.remove-btn:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(220, 53, 69, 0.3);
+}
+
+/* Download Options (Step 4) */
+.download-info-text {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+    color: var(--text-dark);
+}
+
+.download-options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.download-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 25px 20px;
+    border: none;
+    border-radius: var(--border-radius-small);
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px var(--shadow-light);
+    color: white;
+    text-align: center;
+}
+
+.download-btn i {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.download-png {
+    background: linear-gradient(45deg, #007bff, #00c6ff);
+}
+.download-svg {
+    background: linear-gradient(45deg, #28a745, #2ed16f);
+}
+.download-jpg {
+    background: linear-gradient(45deg, #ffc107, #ffde59);
+    color: var(--text-dark); /* Adjust for better contrast */
+}
+
+.download-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--shadow-medium);
+    opacity: 0.9;
+}
+
+/* Step Navigation Buttons */
+.step-nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.primary-btn, .secondary-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: var(--border-radius-large);
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.primary-btn {
+    background: linear-gradient(45deg, var(--primary-blue), var(--accent-color));
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+    opacity: 0.95;
+}
+
+.secondary-btn {
+    background-color: #6c757d;
+    color: white;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+}
+
+.secondary-btn:hover {
+    background-color: #5a6268;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+}
+
+.start-over-btn {
+    background: linear-gradient(45deg, #ff8c00, #ffc107);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+}
+
+.start-over-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4);
+}
+
+
+/* QR Preview Panel (Right Panel) */
+.qr-preview-wrapper {
+    width: 100%;
+    max-width: 300px;
+    height: 300px;
+    background-color: white;
+    border: 2px dashed var(--border-light);
+    border-radius: var(--border-radius-medium);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+    overflow: hidden; /* Ensure QR code doesn't overflow */
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
+}
+
+.qr-code-display, #barcode-display {
+    display: flex; /* Ensure content is centered if smaller */
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Scale image down to fit, maintaining aspect ratio */
+    transition: opacity 0.5s ease-in-out;
+}
+
+.preview-placeholder-text {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 1.1em;
+}
+
+.preview-placeholder-text i {
+    font-size: 3em;
+    margin-bottom: 15px;
+    color: var(--border-light);
+}
+
+
+/* FAQ Section */
+.faq-toggle-btn {
+    background: linear-gradient(45deg, #17a2b8, #20c997);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: var(--border-radius-large);
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.faq-toggle-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(23, 162, 184, 0.4);
+}
+
+/* FAQ Modal */
 .faq-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -452,192 +745,286 @@ input[type="file"] { border: none; }
     visibility: visible;
 }
 
-.faq-content {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    max-width: 600px;
+.faq-modal {
+    background-color: white;
+    padding: 40px;
+    border-radius: var(--border-radius-medium);
+    box-shadow: 0 10px 30px var(--shadow-medium);
+    max-width: 700px;
     width: 90%;
-    max-height: 90vh; /* স্ক্রিনের উচ্চতার 90% */
-    overflow-y: auto; /* কন্টেন্ট বেশি হলে স্ক্রল করার জন্য */
+    max-height: 80vh;
+    overflow-y: auto;
     position: relative;
-    font-family: 'Noto Sans Bengali', sans-serif;
-    color: var(--text-color);
-    animation: slideIn 0.5s ease-out;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-@keyframes slideIn {
-    from {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+.faq-overlay.active .faq-modal {
+    transform: translateY(0);
+    opacity: 1;
 }
 
-.faq-content h2 {
-    font-size: 1.8rem;
-    color: var(--primary-color);
-    margin-bottom: 20px;
+.faq-modal h2 {
+    color: var(--primary-blue);
+    margin-top: 0;
+    margin-bottom: 30px;
     text-align: center;
-}
-
-.faq-content p {
-    margin-bottom: 15px;
-    line-height: 1.6;
-}
-
-.faq-content strong {
-    color: #34495e;
-}
-
-.faq-content ul {
-    margin-bottom: 15px;
-    padding-left: 20px;
-}
-
-.faq-content ul li {
-    margin-bottom: 8px;
+    font-size: 2em;
 }
 
 .faq-close-btn {
     position: absolute;
     top: 15px;
-    right: 15px;
+    right: 20px;
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: 2.5em;
+    color: var(--text-light);
     cursor: pointer;
-    color: #888;
     transition: color 0.3s ease;
 }
 
 .faq-close-btn:hover {
-    color: #333;
+    color: var(--text-dark);
 }
 
-/* ছোট স্ক্রিনের জন্য মোডাল রেসপনসিভনেস */
-@media (max-width: 768px) {
-    .faq-content {
-        padding: 20px;
-        width: 95%; /* মোবাইলে কন্টেন্টের প্রস্থ আরও একটু বাড়ানো হয়েছে */
-        font-size: 0.9em; /* ছোট স্ক্রিনে ফন্ট সাইজ সামান্য কমানো হয়েছে */
-    }
-    .faq-content h2 {
-        font-size: 1.5rem;
-    }
-    .faq-close-btn {
-        font-size: 20px;
-        top: 10px;
-        right: 10px;
-    }
-    .faq-content p, .faq-content ul li {
-        font-size: 0.9em; /* প্যারাগ্রাফ এবং লিস্ট আইটেমের ফন্ট সাইজ কমানো */
-    }
-    .faq-content ul {
-        padding-left: 15px; /* লিস্টের প্যাডিং কমানো */
-        margin-bottom: 10px; /* লিস্টের নিচের মার্জিন কমানো */
-    }
-    .faq-content ul li {
-        margin-bottom: 5px; /* লিস্ট আইটেমের মার্জিন কমানো */
-    }
-}
-@media (max-width: 480px) {
-    .faq-content {
-        padding: 15px;
-        width: 98%; /* আরও ছোট স্ক্রিনের জন্য প্রস্থ বাড়ানো হয়েছে */
-        font-size: 0.85em; /* আরও ছোট স্ক্রিনের জন্য ফন্ট সাইজ কমানো হয়েছে */
-    }
-    .faq-content h2 {
-        font-size: 1.3rem;
-    }
-    .faq-close-btn {
-        font-size: 18px;
-        top: 8px;
-        right: 8px;
-    }
-    .faq-content ul {
-        padding-left: 10px; /* আরও ছোট স্ক্রিনের জন্য লিস্টের প্যাডিং আরও কমানো */
-        margin-bottom: 8px;
-    }
-    .faq-content ul li {
-        margin-bottom: 3px;
-    }
+.faq-item {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed var(--border-light);
 }
 
-/* FAQs টগল বাটনের স্টাইল */
-.faq-toggle-btn {
-    background-color: #3498db; /* একটি ভিন্ন রঙ ব্যবহার করা হয়েছে */
+.faq-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.faq-item h3 {
+    color: var(--text-dark);
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.faq-item p {
+    color: var(--text-light);
+    font-size: 0.95em;
+    line-height: 1.8;
+}
+
+/* Footer */
+.site-footer {
+    background-color: var(--text-dark);
     color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    display: block; /* এটিকে একটি ব্লক এলিমেন্ট হিসেবে সেট করুন */
-    margin: 15px auto 30px auto; /* h1 এর নিচে এবং main-content এর উপরে মার্জিন */
-    transition: background-color 0.3s ease;
-    font-family: 'Noto Sans Bengali', sans-serif;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    padding: 30px 0;
+    margin-top: auto; /* Pushes footer to the bottom */
 }
 
-.faq-toggle-btn:hover {
-    background-color: #2980b9;
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-@media (max-width: 768px) {
-    .faq-toggle-btn {
-        width: 90%; /* ছোট স্ক্রিনে বাটনটি আরও চওড়া হবে */
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
-
-.animated-footer {
-    text-align: center;
-    padding: 20px;
-    margin-top: 40px; /* কন্টেন্টের সাথে ফুটারের ব্যবধান */
-    /* এখানে ব্যাকগ্রাউন্ডের জন্য অ্যানিমেশন প্রপার্টি যোগ করা হচ্ছে */
-    background: linear-gradient(90deg, #ff0066, #6600ff, #00ccff, #00ff99, #ffcc00); /* প্রাথমিক গ্রেডিয়েন্ট রঙ */
-    background-size: 300% 300%; /* ব্যাকগ্রাউন্ডের আকার, যাতে অ্যানিমেশনের জন্য স্থান থাকে */
-    animation: rgbShift 10s ease infinite; /* অ্যানিমেশন প্রপার্টি */
-    color: #030000; /* হালকা টেক্সট রঙ */
+.site-footer p {
+    margin: 0;
     font-size: 0.9em;
-    border-radius: 8px; /* কন্টেইনারের মতো গোলাকার কোণা */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* হালকা শ্যাডো */
+    opacity: 0.8;
 }
 
-@keyframes rgbShift {
-    0% {
-        background-position: 0% 50%;
+.social-links a {
+    color: white;
+    font-size: 1.5em;
+    margin-left: 20px;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--primary-blue);
+    transform: scale(1.2);
+}
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .generator-panels {
+        flex-direction: column;
     }
-    50% {
-        background-position: 100% 50%;
+
+    .right-panel {
+        position: relative;
+        top: 0;
+        align-self: center;
+        width: 100%;
     }
-    100% {
-        background-position: 0% 50%;
+
+    .qr-preview-wrapper {
+        max-width: 250px;
+        height: 250px;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.5em;
+    }
+    .hero-section p {
+        font-size: 1.1em;
+    }
+
+    .step-indicator span {
+        width: 40px;
+        height: 40px;
+        font-size: 1em;
+    }
+    .step-indicator p {
+        font-size: 0.8em;
     }
 }
 
-/* যদি ছোট স্ক্রিনে ফুটারের মার্জিন ঠিক করতে হয় */
 @media (max-width: 768px) {
-    .animated-footer {
-        margin-top: 20px;
-        padding: 15px;
-        font-size: 0.8em; /* ছোট স্ক্রিনে ফন্ট সাইজ কমানো */
-    }
-}
-    .animated-footer {
-        margin-top: 20px;
-        padding: 15px;
+    .main-nav {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px; /* Below header */
+        left: 0;
+        width: 100%;
+        background: linear-gradient(90deg, var(--primary-blue), var(--accent-color));
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        padding: 15px 0;
     }
 
-    .copyright-symbol {
-    font-size: 1.5em; /* আপনার পছন্দ অনুযায়ী আকার পরিবর্তন করুন */
-    /* উদাহরণস্বরূপ, 1.2em এটিকে তার আশেপাশের টেক্সটের চেয়ে 20% বড় করবে */
-    vertical-align: middle; /* টেক্সটের সাথে উল্লম্বভাবে সারিবদ্ধ করার জন্য */
-    margin-right: 2px; /* সিম্বল এবং '2024' এর মধ্যে সামান্য ব্যবধানের জন্য */
+    .main-nav.active {
+        display: flex;
+    }
+
+    .main-nav a {
+        margin: 10px 20px;
+        text-align: center;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .header-content {
+        padding: 0 20px;
+    }
+
+    .hero-section {
+        padding: 60px 0;
+    }
+    .hero-section h1 {
+        font-size: 2em;
+    }
+    .hero-section p {
+        font-size: 1em;
+    }
+
+    .generator-container {
+        padding: 20px;
+        margin: 20px auto;
+    }
+
+    .qr-type-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+    }
+
+    .qr-type-card {
+        padding: 15px;
+    }
+    .qr-type-card i {
+        font-size: 2em;
+    }
+    .qr-type-card h3 {
+        font-size: 1em;
+    }
+    .qr-type-card p {
+        font-size: 0.75em;
+    }
+
+    .design-options-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .download-options-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .step-nav-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .primary-btn, .secondary-btn, .start-over-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .faq-modal {
+        padding: 30px;
+    }
+    .faq-modal h2 {
+        font-size: 1.8em;
+    }
+    .faq-close-btn {
+        font-size: 2em;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .social-links {
+        margin-top: 15px;
+    }
+    .social-links a {
+        margin: 0 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo a {
+        font-size: 1.5em;
+    }
+    .hero-section h1 {
+        font-size: 1.8em;
+    }
+    .hero-section p {
+        font-size: 0.9em;
+    }
+    .generator-container {
+        padding: 15px;
+    }
+    .step-indicator span {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9em;
+    }
+    .step-indicator p {
+        font-size: 0.7em;
+    }
+    .step-panel h2 {
+        font-size: 1.5em;
+    }
+    .input-form input,
+    .input-form textarea,
+    .input-form select {
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+    .download-btn {
+        padding: 20px 15px;
+        font-size: 1em;
+    }
+    .download-btn i {
+        font-size: 2em;
+    }
 }
