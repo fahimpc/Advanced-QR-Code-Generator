@@ -16,7 +16,18 @@
     --font-secondary: 'Noto Sans Bengali', sans-serif;
 }
 
-/* Base Body Styles */
+/* Universal Box-Sizing (Crucial for consistent responsiveness) */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* Base HTML & Body Styles */
+html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     margin: 0;
     font-family: var(--font-primary);
@@ -26,8 +37,12 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    overflow-x: hidden; /* এই লাইনটি যোগ করা হয়েছে */
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
+
+/* Rest of your CSS remains the same */
 
 /* Utility Classes */
 .container {
