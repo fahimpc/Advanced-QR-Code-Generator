@@ -26,6 +26,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    overflow-x: hidden; /* এই লাইনটি যোগ করা হয়েছে */
 }
 
 /* Utility Classes */
@@ -582,11 +583,6 @@ body {
     box-shadow: 0 4px 12px var(--shadow-light);
     color: white;
     text-align: center;
-}
-
-.download-btn i {
-    font-size: 2.5em;
-    margin-bottom: 10px;
 }
 
 .download-png {
